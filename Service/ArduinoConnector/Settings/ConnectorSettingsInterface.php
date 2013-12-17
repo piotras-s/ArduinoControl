@@ -5,9 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings;
 
-
 interface ConnectorSettingsInterface
 {
     public function getConnectorClass();
 }
- 

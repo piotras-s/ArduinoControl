@@ -5,8 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
-use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\Configurator\ConnectorConfiguratorInterface;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
 
 /**
@@ -18,38 +16,38 @@ use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInt
 class ConnectorFactory
 {
 
-	/**
-	 * @var Settings\ConnectorSettingsInterface used to load settings from DB
-	 */
-	protected $settingsFromDatabase;
+    /**
+     * @var Settings\ConnectorSettingsInterface used to load settings from DB
+     */
+    protected $settingsFromDatabase;
 
-	public function __construct(ConnectorSettingsInterface $settingsFromDatabase)
-	{
-		$this->settingsFromDatabase = $settingsFromDatabase;
-	}
+    public function __construct(ConnectorSettingsInterface $settingsFromDatabase)
+    {
+        $this->settingsFromDatabase = $settingsFromDatabase;
+    }
 
-	/**
-	 * Returns connector
-	 * @param ConnectorSettingsInterface $settings
-	 *
-	 * @return ArduinoConnectorWrapper
-	 */
-	public function getConnector(ConnectorSettingsInterface $settings)
-	{
-		$class = $settings->getConnectorClass();
-		return new ArduinoConnectorWrapper(
-			new $class($settings)
-		);
-	}
+    /**
+     * Returns connector
+     * @param ConnectorSettingsInterface $settings
+     *
+     * @return ArduinoConnectorWrapper
+     */
+    public function getConnector(ConnectorSettingsInterface $settings)
+    {
+        $class = $settings->getConnectorClass();
 
-	/**
-	 * Returns connector with default setting read from date
-	 * @return ArduinoConnectorWrapper
-	 */
-	public function getConnectorFromDatabase()
-	{
-		return $this->getConnector($this->settingsFromDatabase->getSettings());
-	}
+        return new ArduinoConnectorWrapper(
+            new $class($settings)
+        );
+    }
+
+    /**
+     * Returns connector with default setting read from date
+     * @return ArduinoConnectorWrapper
+     */
+    public function getConnectorFromDatabase()
+    {
+        return $this->getConnector($this->settingsFromDatabase->getSettings());
+    }
 
 }
- 

@@ -5,47 +5,45 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
-
 interface ConnectorInterface
 {
 
-	/**
-	 * Enables the connector
-	 * @return mixed
-	 */
-	public function connect();
+    /**
+     * Enables the connector
+     * @return mixed
+     */
+    public function connect();
 
-	/**
-	 * Disables the connector
-	 * @return mixed
-	 */
-	public function disconnect();
+    /**
+     * Disables the connector
+     * @return mixed
+     */
+    public function disconnect();
 
-	/**
-	 * Process single request to arduino
-	 * @param array $variables
-	 *
-	 * @return mixed
-	 */
-	public function sendRequest(array $variables);
+    /**
+     * Process single request to arduino
+     * @param array $variables
+     *
+     * @return mixed
+     */
+    public function sendRequest(array $variables);
 
-	/**
-	 * Returns true if the connector is enabled
-	 * @return bool
-	 */
-	public function isEnabled();
+    /**
+     * Returns true if the connector is enabled
+     * @return bool
+     */
+    public function isEnabled();
 
-	/**
-	 * Returns response from arduino
-	 * @return string
-	 */
-	public function getResponse();
+    /**
+     * Returns response from arduino
+     * @return string
+     */
+    public function getResponse();
 
-	/**
-	 * Returns connector settings
-	 * @return mixed
-	 */
-	public function getSettings();
+    /**
+     * Returns connector settings
+     * @return mixed
+     */
+    public function getSettings();
 
 }
- 
