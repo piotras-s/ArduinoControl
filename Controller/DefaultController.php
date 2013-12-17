@@ -2,8 +2,10 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorWrapper;
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\WebArduinoConnector;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorFactory;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsFromDatabase;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebArduinoConnectorSettings;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,16 +23,16 @@ class DefaultController extends Controller
 	 */
 	public function indexAction($name)
     {
-
-		$connector = $this->get('arduino.connector.factory')->getConnector();
+	    /** @var ConnectorInterface $connector */
+	    $connector = $this->get('arduino.connector.factory')->getConnectorFromDatabase();
 
 	    $connector->connect();
-	    $adress = $connector->sendRequest(
-		    array('test' => 'test')
+	    $address = $connector->sendRequest(
+		    array('1' => $name)
 	    );
 
         return array(
-	        'adress' => $adress,
+	        'address' => $address,
 	        'connector' => $connector
         );
     }

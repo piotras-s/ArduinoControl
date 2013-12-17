@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
-abstract class ArduinoConnector implements ConnectorInterface
+abstract class AbstractArduinoConnector implements ConnectorInterface
 {
 
 	/**
