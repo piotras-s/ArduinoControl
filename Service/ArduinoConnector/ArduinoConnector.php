@@ -1,0 +1,92 @@
+<?php
+/**
+ * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
+ */
+
+namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
+
+abstract class ArduinoConnector implements ConnectorInterface
+{
+
+	/**
+	 * @var int
+	 */
+	protected $status;
+
+	/**
+	 * @var string
+	 */
+	protected $response;
+
+	const STATUS_ENABLED = 1;
+	const STATUS_DISABLED = 0;
+
+	/**
+	 * @return $this
+	 */
+	public function connect()
+	{
+		$this->setStatus(self::STATUS_ENABLED);
+
+		return $this;
+	}
+
+	/**
+	 * @return $this
+	 */
+	public function disconnect()
+	{
+		$this->setStatus(self::STATUS_DISABLED);
+
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getStatus()
+	{
+		return $this->status;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPossibleStatuses()
+	{
+		return array(
+			self::STATUS_DISABLED => 'disabled',
+			self::STATUS_ENABLED => 'enabled',
+		);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResponse()
+	{
+		return $this->response;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEnabled()
+	{
+		return self::STATUS_ENABLED === $this->getStatus();
+	}
+
+	/**
+	 * @param $status
+	 *
+	 * @return mixed
+	 */
+	protected function setStatus($status)
+	{
+		$this->status = $status;
+
+		return $status;
+	}
+
+}
+ 
