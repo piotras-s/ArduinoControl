@@ -1,0 +1,18 @@
+{% extends '@Arduino/index.html.twig' %}
+
+{% block content %}
+<div class="row">
+    <h1>Main site</h1>
+</div>
+<div class="row">
+    {% if queriesCount == 0 %}
+        No query was made
+    {% else %}
+        From <strong>{{ fromDate.format('H:i d.m.Y') }}</strong> to <strong>{{ toDate.format('H:i d.m.Y') }}</strong>:<br/>
+        Queries count: {{ queriesCount }}<br/>
+        Avarge query time: {{ meanTime }}<br/>
+        Max time: {{ maxTime }}<br/>
+        Min time: {{ minTime }}<br/>
+    {% endif %}
+</div>
+{% endblock %}

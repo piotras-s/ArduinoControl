@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
+use KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface;
 
 /**
  * Class ConnectorFactory will return initialized connector class by parameters specified in database with values
@@ -21,9 +22,15 @@ class ConnectorFactory
      */
     protected $settingsFromDatabase;
 
-    public function __construct(ConnectorSettingsInterface $settingsFromDatabase)
+    /**
+     * @var \KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface
+     */
+    protected $responseHandler;
+
+    public function __construct(ConnectorSettingsInterface $settingsFromDatabase, ResponseHandlerInterface $responseHandler)
     {
         $this->settingsFromDatabase = $settingsFromDatabase;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
@@ -37,7 +44,7 @@ class ConnectorFactory
         $class = $settings->getConnectorClass();
 
         return new ArduinoConnectorWrapper(
-            new $class($settings)
+            new $class($settings, $this->responseHandler)
         );
     }
 

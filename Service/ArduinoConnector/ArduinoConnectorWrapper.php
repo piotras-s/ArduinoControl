@@ -12,11 +12,6 @@ class ArduinoConnectorWrapper implements ConnectorInterface
      */
     protected $arduinoConnector;
 
-    /**
-     * @var string time taken by sendRequest method
-     */
-    protected $time;
-
     public function __construct(ConnectorInterface $arduinoConnector)
     {
         $this->arduinoConnector = $arduinoConnector;
@@ -43,11 +38,7 @@ class ArduinoConnectorWrapper implements ConnectorInterface
      */
     public function sendRequest(array $variables)
     {
-        $timer1 = microtime();
-        $return = $this->arduinoConnector->sendRequest($variables);
-        $this->time = sprintf('%2.2f %s', abs($timer1 - microtime())*100, 'ms');
-
-        return $return;
+        return $this->arduinoConnector->sendRequest($variables);
     }
 
     /**
@@ -75,11 +66,11 @@ class ArduinoConnectorWrapper implements ConnectorInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getTime()
     {
-        return $this->time;
+        return $this->arduinoConnector->getTime();
     }
 
 }

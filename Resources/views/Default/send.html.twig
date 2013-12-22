@@ -1,0 +1,16 @@
+{% extends '@Arduino/index.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        Final adress: {{ address }}<br/>
+    </div>
+    <div class="row">
+        Time: {{ connector.time }}
+    </div>
+    <div class="row">
+        Response:
+    </div>
+    <div class="row">
+        {{ connector.response }}
+    </div>
+{% endblock %}

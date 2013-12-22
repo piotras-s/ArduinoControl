@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebConnectorSettings;
+use KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface;
 
 class WebConnector extends AbstractArduinoConnector
 {
@@ -16,18 +17,19 @@ class WebConnector extends AbstractArduinoConnector
     protected $curl;
 
     /**
-     * @var Settings\WebConnectorSettings
-     */
-    protected $settings;
-
-    /**
      * @var string
      */
     protected $finalAdress;
 
-    public function __construct(WebConnectorSettings $settings = null)
+    /**
+     * @var \KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface
+     */
+    protected $responseHandler;
+
+    public function __construct(WebConnectorSettings $settings, ResponseHandlerInterface $responseHandler)
     {
         $this->settings = $settings;
+        $this->responseHandler = $responseHandler;
     }
 
     /**
@@ -43,8 +45,12 @@ class WebConnector extends AbstractArduinoConnector
             if ($variables) {
                 $this->addVariables($variables);
             }
+
+            $beforeCurlTimer = microtime();
             $this->response = curl_exec($this->curl);
+            $this->setTimeDiffer($beforeCurlTimer);
             $this->afterCurl();
+            $this->processResponse($this->response, $this->finalAdress, $this->time);
 
             return $this->finalAdress;
         }
@@ -55,6 +61,18 @@ class WebConnector extends AbstractArduinoConnector
     public function __destruct()
     {
         $this->afterCurl();
+    }
+
+    /**
+     * @param WebConnectorSettings $settings
+     *
+     * @return $this
+     */
+    public function setSettings(WebConnectorSettings $settings)
+    {
+        $this->settings = $settings;
+
+        return $this;
     }
 
     /**
@@ -116,18 +134,13 @@ class WebConnector extends AbstractArduinoConnector
     }
 
     /**
-     * Returns connector settings
-     * @return mixed
+     * @param string $response
+     * @param string $query
+     * @param int    $time
      */
-    public function getSettings()
+    protected function processResponse(&$response, $query = null, $time = null)
     {
-        return $this->settings;
+        $this->responseHandler->handle($response, $query, $time);
     }
 
-    public function setSettings(WebConnectorSettings $settings)
-    {
-        $this->settings = $settings;
-
-        return $this;
-    }
 }

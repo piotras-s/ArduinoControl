@@ -46,4 +46,10 @@ interface ConnectorInterface
      */
     public function getSettings();
 
+    /**
+     * Returns time[ms] in which request was made
+     * @return mixed
+     */
+    public function getTime();
+
 }

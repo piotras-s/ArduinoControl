@@ -5,6 +5,8 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
+
 abstract class AbstractArduinoConnector implements ConnectorInterface
 {
 
@@ -17,6 +19,16 @@ abstract class AbstractArduinoConnector implements ConnectorInterface
      * @var string
      */
     protected $response;
+
+    /**
+     * @var float
+     */
+    protected $time;
+
+    /**
+     * @var ConnectorSettingsInterface
+     */
+    protected $settings;
 
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 0;
@@ -74,6 +86,34 @@ abstract class AbstractArduinoConnector implements ConnectorInterface
     public function isEnabled()
     {
         return self::STATUS_ENABLED === $this->getStatus();
+    }
+
+    /**
+     * @return float
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @return ConnectorSettingsInterface|mixed
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param int      $timeBeforeAction
+     * @param int|null $timeAfterAction
+     */
+    protected function setTimeDiffer($timeBeforeAction, $timeAfterAction = null)
+    {
+        if (!$timeAfterAction) {
+            $timeAfterAction = microtime();
+        }
+        $this->time = sprintf('%2.2f', abs($timeBeforeAction - $timeAfterAction)*100);
     }
 
     /**

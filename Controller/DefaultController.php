@@ -11,14 +11,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/{name}", name="arduino_index")
+     * @Route("/send/{name}", name="arduino_send")
      * @Template()
      * @Cache()
      * @param $name
      *
      * @return array
      */
-    public function indexAction($name)
+    public function sendAction($name)
     {
         /** @var ConnectorInterface $connector */
         $connector = $this->get('arduino.connector.factory')->getConnectorFromDatabase();
@@ -31,6 +31,25 @@ class DefaultController extends Controller
         return array(
             'address' => $address,
             'connector' => $connector
+        );
+    }
+
+    /**
+     * @Route("/", name="arduino_main")
+     * @Template()
+     * @Cache
+     */
+    public function mainAction()
+    {
+        $repository = $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog');
+
+        return array(
+            'fromDate' => new \DateTime($repository->getMinDate()),
+            'toDate' => new \DateTime($repository->getMaxDate()),
+            'meanTime' => sprintf('%2.2f %s', $repository->getMeanTime(), 'ms'),
+            'maxTime' => sprintf('%2.2f %s', $repository->getMaxTime(), 'ms'),
+            'minTime' => sprintf('%2.2f %s', $repository->getMinTime(), 'ms'),
+            'queriesCount' => $repository->getNumberOfQueries(),
         );
     }
 }
