@@ -24,9 +24,7 @@ class DefaultController extends Controller
         $connector = $this->get('arduino.connector.factory')->getConnectorFromDatabase();
 
         $connector->connect();
-        $address = $connector->sendRequest(
-            array('1' => $name)
-        );
+        $address = $connector->sendRequest();
 
         return array(
             'address' => $address,

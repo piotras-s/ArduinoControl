@@ -36,7 +36,7 @@ class ArduinoConnectorWrapper implements ConnectorInterface
     /**
      * @inheritdoc
      */
-    public function sendRequest(array $variables)
+    public function sendRequest(array $variables = array())
     {
         return $this->arduinoConnector->sendRequest($variables);
     }

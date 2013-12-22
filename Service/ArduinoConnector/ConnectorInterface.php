@@ -26,7 +26,7 @@ interface ConnectorInterface
      *
      * @return mixed
      */
-    public function sendRequest(array $variables);
+    public function sendRequest(array $variables = array());
 
     /**
      * Returns true if the connector is enabled

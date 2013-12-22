@@ -5,8 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ResponseHandler\Processor;
 
-interface ProcessorInterface
+class ProcessorException extends \RuntimeException
 {
-    public function process(&$text);
-    public function supports(&$text);
+
 }

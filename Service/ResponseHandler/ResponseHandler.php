@@ -63,7 +63,9 @@ class ResponseHandler implements ResponseHandlerInterface
     {
         /** @var ProcessorInterface $processor */
         foreach ($this->processors as $processor) {
-            $processor->process($response);
+            if ($processor->supports($response)) {
+                $processor->process($response);
+            }
         }
     }
 

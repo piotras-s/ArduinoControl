@@ -38,7 +38,7 @@ class WebConnector extends AbstractArduinoConnector
      * @return mixed
      * @throws ArduinoConnectorException
      */
-    public function sendRequest(array $variables)
+    public function sendRequest(array $variables = array())
     {
         if ($this->isEnabled()) {
             $this->beforeCurl();
