@@ -1,0 +1,15 @@
+parameters:
+    arduino.form.thermometer_form.class:  'KGzocha\ArduinoBundle\Form\ThermometerForm\ThermometerForm'
+    arduino.form.thermometer_form.alias:  'thermometer_form'
+    arduino.form.handler.thermometer_form.class:  'KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm\ThermometerFormHandler'
+    arduino.form.handler.thermometer_form.field_name: 'thermometer'
+
+services:
+    arduino.form.thermometer_form:
+        class:  %arduino.form.thermometer_form.class%
+        tags:
+            - { name: form.type, alias: %arduino.form.thermometer_form.alias% }
+
+    arduino.form.handler.thermometer_form:
+        class:  %arduino.form.handler.thermometer_form.class%
+        arguments: [%arduino.form.handler.thermometer_form.field_name%]

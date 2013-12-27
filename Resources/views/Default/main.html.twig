@@ -1,4 +1,5 @@
 {% extends '@Arduino/index.html.twig' %}
+{% form_theme form 'ArduinoBundle:Form:form.html.twig' %}
 
 {% block content %}
 <div class="row">
@@ -16,22 +17,36 @@
     {% endif %}
     <br/><br/>
 </div>
+<div class="well">
+    <div class="row">
+
+        {{ form_start(form, {'attr': {'role': 'form'} }) }}
+        <div class="col-lg-6">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary btn-large">Submit</button>
+        </div>
+        {{ form_end(form) }}
+
+    </div>
     <div class="row">
         <div id="myfirstchart" style="height: 250px;"></div>
     </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        new Morris.Area({
-            element: 'myfirstchart',
-            data: [
-                {{ data|raw }}
-            ],
-            xkey: 'x',
-            ykeys: ['y'],
-            xLabels: "day",
-            labels: ['Temperature']
-        });
-    </script>
+    {% if data is not null %}
+        <script>
+            new Morris.Area({
+                element: 'myfirstchart',
+                data: [
+                    {{ data|raw }}
+                ],
+                xkey: 'x',
+                ykeys: ['y'],
+                xLabels: "day",
+                labels: ['Temperature']
+            });
+        </script>
+    {% endif %}
 {% endblock %}

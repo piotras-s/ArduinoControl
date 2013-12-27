@@ -5,7 +5,9 @@ namespace KGzocha\ArduinoBundle\Controller;
 use KGzocha\ArduinoBundle\Entity\TemperatureLog;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorException;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm\ThermometerFormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -44,9 +46,20 @@ class DefaultController extends Controller
      * @Template()
      * @Cache
      */
-    public function mainAction()
+    public function mainAction(Request $request)
     {
-        $thermometer = $this->get('arduino.statistics.parser')->getStatistics('ArduinoBundle:TemperatureLog', 2);
+        $form = $this->createForm('thermometer_form');
+        /** @var ThermometerFormHandler $formHandler */
+        $formHandler = $this->get('arduino.form.handler.thermometer_form')->setForm($form);
+
+        $thermometer = null;
+        if ($formHandler->handle($request)) {
+            $thermometer = $this->get('arduino.statistics.parser')->getStatistics(
+                'ArduinoBundle:TemperatureLog',
+                $formHandler->getThermometer()->getId()
+            );
+        }
+
         $repository = $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog');
 
         return array(
@@ -57,6 +70,7 @@ class DefaultController extends Controller
             'minTime' => sprintf('%2.2f %s', $repository->getMinTime(), 'ms'),
             'queriesCount' => $repository->getNumberOfQueries(),
             'data' => $thermometer,
+            'form' => $form->createView(),
         );
     }
 }
