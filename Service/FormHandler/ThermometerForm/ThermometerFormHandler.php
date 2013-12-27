@@ -14,6 +14,7 @@ class ThermometerFormHandler
 {
 
     const THERMOMETER_FIELD_NAME = 'thermometer';
+    const THERMOMETER_FORM_NAME = 'thermometer_form';
 
     /**
      * @var Form
@@ -35,14 +36,21 @@ class ThermometerFormHandler
      */
     protected $entityManager;
 
+    /**
+     * @var string
+     */
+    protected $thermometerFormAlias;
+
     public function __construct(
         FormFactory $formFactory,
         EntityManager $entityManager,
+        $thermometerFormName = self::THERMOMETER_FORM_NAME,
         $thermometerFieldName = self::THERMOMETER_FIELD_NAME)
     {
         $this->thermometerFieldName = $thermometerFieldName;
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
+        $this->thermometerFormAlias = $thermometerFormName;
     }
 
     /**
@@ -51,9 +59,9 @@ class ThermometerFormHandler
     public function createForm()
     {
         $this->form = $this->formFactory->create(
-            'thermometer_form',
+            $this->thermometerFormAlias,
             array(
-                'thermometer' => $this->entityManager
+                $this->thermometerFieldName => $this->entityManager
                     ->getRepository('ArduinoBundle:Thermometer')
                     ->findFirstThermometer()
             ),
