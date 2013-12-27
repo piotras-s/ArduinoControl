@@ -3,6 +3,7 @@
 namespace KGzocha\ArduinoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use KGzocha\ArduinoBundle\Entity\Thermometer;
 
 /**
  * ThermometerRepository
@@ -12,4 +13,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class ThermometerRepository extends EntityRepository
 {
+    /**
+     * @return Thermometer|null
+     */
+    public function findFirstThermometer()
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.id', 'asc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -1,19 +1,21 @@
 {% extends '@Arduino/index.html.twig' %}
 {% form_theme form 'ArduinoBundle:Form:form.html.twig' %}
+{% set timeFormat = '%2.2f %s' %}
+{% set timeUnit = 'ms' %}
 
 {% block content %}
 <div class="row">
     <h1>Main site</h1>
 </div>
 <div class="row">
-    {% if queriesCount == 0 %}
+    {% if repository.numberOfQueries == 0 %}
         No query was made
     {% else %}
-        From <strong>{{ fromDate.format('H:i d.m.Y') }}</strong> to <strong>{{ toDate.format('H:i d.m.Y') }}</strong>:<br/>
-        Queries count: {{ queriesCount }}<br/>
-        Avarge query time: {{ meanTime }}<br/>
-        Max time: {{ maxTime }}<br/>
-        Min time: {{ minTime }}<br/>
+        From <strong>{{ repository.minDate|date() }}</strong> to <strong>{{ repository.maxDate|date() }}</strong>:<br/>
+        Queries count: {{ repository.numberOfQueries }}<br/>
+        Avarge query time: {{ timeFormat|format(repository.meanTime, timeUnit) }}<br/>
+        Max time: {{ timeFormat|format(repository.maxTime, timeUnit) }}<br/>
+        Min time: {{ timeFormat|format(repository.minTime, timeUnit) }}<br/>
     {% endif %}
     <br/><br/>
 </div>
@@ -23,7 +25,6 @@
         {{ form_start(form, {'attr': {'role': 'form'} }) }}
         <div class="col-lg-6">
             {{ form_widget(form) }}
-            <button type="submit" class="btn btn-primary btn-large">Submit</button>
         </div>
         {{ form_end(form) }}
 
@@ -35,6 +36,13 @@
 {% endblock %}
 
 {% block javascript %}
+    <script>
+        $(document).ready(function(){
+            $('#thermometer_form_thermometer').change(function () {
+                $('#thermometer_form_thermometer').closest("form").submit();
+            });
+        });
+    </script>
     {% if data is not null %}
         <script>
             new Morris.Area({

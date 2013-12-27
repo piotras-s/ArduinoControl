@@ -65,7 +65,7 @@
           <div class="row">
               {% for label, flashes in app.session.flashbag.all %}
                   {% for flash in flashes %}
-                      <div class="alert alert-{{ label }} alert-dismissable">
+                      <div class="alert alert-dismissable alert-{{ label }}">
                           {{ flash }}
                       </div>
                   {% endfor %}

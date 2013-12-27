@@ -32,7 +32,7 @@ class DefaultController extends Controller
         try {
             $address = $connector->sendRequest();
         } catch (ArduinoConnectorException $exception) {
-            $this->get('session')->getFlashBag()->add('error', $exception->getMessage());
+            $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
         }
 
         return array(
@@ -48,29 +48,19 @@ class DefaultController extends Controller
      */
     public function mainAction(Request $request)
     {
-        $form = $this->createForm('thermometer_form');
         /** @var ThermometerFormHandler $formHandler */
-        $formHandler = $this->get('arduino.form.handler.thermometer_form')->setForm($form);
+        $formHandler = $this->get('arduino.form.handler.thermometer_form')->createForm();
 
-        $thermometer = null;
-        if ($formHandler->handle($request)) {
-            $thermometer = $this->get('arduino.statistics.parser')->getStatistics(
-                'ArduinoBundle:TemperatureLog',
-                $formHandler->getThermometer()->getId()
-            );
-        }
-
-        $repository = $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog');
+        $formHandler->handle($request);
+        $thermometer = $this->get('arduino.statistics.parser')->getStatistics(
+            'ArduinoBundle:TemperatureLog',
+            $formHandler->getThermometer()->getId()
+        );
 
         return array(
-            'fromDate' => new \DateTime($repository->getMinDate()),
-            'toDate' => new \DateTime($repository->getMaxDate()),
-            'meanTime' => sprintf('%2.2f %s', $repository->getMeanTime(), 'ms'),
-            'maxTime' => sprintf('%2.2f %s', $repository->getMaxTime(), 'ms'),
-            'minTime' => sprintf('%2.2f %s', $repository->getMinTime(), 'ms'),
-            'queriesCount' => $repository->getNumberOfQueries(),
+            'repository' => $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog'),
             'data' => $thermometer,
-            'form' => $form->createView(),
+            'form' => $formHandler->getForm()->createView(),
         );
     }
 }

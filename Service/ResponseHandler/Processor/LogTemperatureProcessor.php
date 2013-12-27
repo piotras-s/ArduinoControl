@@ -58,14 +58,16 @@ class LogTemperatureProcessor implements ProcessorInterface
     public function process(&$text)
     {
         foreach (preg_split('/\n/', $text) as $line) {
-            $tempLog = (new TemperatureLog())
-                ->setDate(new \DateTime())
-                ->setValue($this->extractTempValue($line))
-                ->setThermometer(
-                    $this->getThermometerBySystemId($this->extractThermometer($line))
-                );
+            if ($this->supports($line)) {
+                $tempLog = (new TemperatureLog())
+                    ->setDate(new \DateTime())
+                    ->setValue($this->extractTempValue($line))
+                    ->setThermometer(
+                        $this->getThermometerBySystemId($this->extractThermometer($line))
+                    );
 
-            $this->entityManager->persist($tempLog);
+                $this->entityManager->persist($tempLog);
+            }
         }
 
         $this->entityManager->flush();

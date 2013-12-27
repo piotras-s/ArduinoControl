@@ -4,7 +4,9 @@
  */
 namespace KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm;
 
+use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Thermometer;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
@@ -19,23 +21,48 @@ class ThermometerFormHandler
     protected $form;
 
     /**
+     * @var FormFactory
+     */
+    protected $formFactory;
+
+    /**
      * @var string
      */
     protected $thermometerFieldName;
 
-    public function __construct($thermometerFieldName = self::THERMOMETER_FIELD_NAME)
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    public function __construct(
+        FormFactory $formFactory,
+        EntityManager $entityManager,
+        $thermometerFieldName = self::THERMOMETER_FIELD_NAME)
     {
         $this->thermometerFieldName = $thermometerFieldName;
+        $this->formFactory = $formFactory;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * @param Form $form
-     *
-     * @return $this
+     * @return ThermometerFormHandler
      */
-    public function setForm(Form $form)
+    public function createForm()
     {
-        $this->form = $form;
+        $this->form = $this->formFactory->create(
+            'thermometer_form',
+            array(
+                'thermometer' => $this->entityManager
+                    ->getRepository('ArduinoBundle:Thermometer')
+                    ->findFirstThermometer()
+            ),
+            array(
+                'attr' => array(
+                    'id' => 'thermometer_form',
+                ),
+            )
+        );
 
         return $this;
     }
@@ -58,6 +85,14 @@ class ThermometerFormHandler
     public function getThermometer()
     {
         return $this->form->getData()[$this->thermometerFieldName];
+    }
+
+    /**
+     * @return \Symfony\Component\Form\Form
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 
 }
