@@ -32,15 +32,9 @@ class ResponseHandler implements ResponseHandlerInterface
      * @param $response
      * @param $query
      * @param $time
-     *
-     * @throws ResponseHandlerException
      */
     public function handle(&$response, $query = null, $time = null)
     {
-        if (!is_string($response)) {
-            throw new ResponseHandlerException("Response should be a string");
-        }
-
         $this->process($response);
 
         $responseLog = new ResponseLog();

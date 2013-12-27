@@ -2,6 +2,8 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
+use KGzocha\ArduinoBundle\Entity\TemperatureLog;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorException;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +26,12 @@ class DefaultController extends Controller
         $connector = $this->get('arduino.connector.factory')->getConnectorFromDatabase();
 
         $connector->connect();
-        $address = $connector->sendRequest();
+        $address = '';
+        try {
+            $address = $connector->sendRequest();
+        } catch (ArduinoConnectorException $exception) {
+            $this->get('session')->getFlashBag()->add('error', $exception->getMessage());
+        }
 
         return array(
             'address' => $address,
@@ -39,6 +46,7 @@ class DefaultController extends Controller
      */
     public function mainAction()
     {
+        $thermometer = $this->get('arduino.statistics.parser')->getStatistics('ArduinoBundle:TemperatureLog', 2);
         $repository = $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog');
 
         return array(
@@ -48,6 +56,7 @@ class DefaultController extends Controller
             'maxTime' => sprintf('%2.2f %s', $repository->getMaxTime(), 'ms'),
             'minTime' => sprintf('%2.2f %s', $repository->getMinTime(), 'ms'),
             'queriesCount' => $repository->getNumberOfQueries(),
+            'data' => $thermometer,
         );
     }
 }

@@ -14,5 +14,24 @@
         Max time: {{ maxTime }}<br/>
         Min time: {{ minTime }}<br/>
     {% endif %}
+    <br/><br/>
 </div>
+    <div class="row">
+        <div id="myfirstchart" style="height: 250px;"></div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        new Morris.Area({
+            element: 'myfirstchart',
+            data: [
+                {{ data|raw }}
+            ],
+            xkey: 'x',
+            ykeys: ['y'],
+            xLabels: "day",
+            labels: ['Temperature']
+        });
+    </script>
 {% endblock %}

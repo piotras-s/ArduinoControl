@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebConnectorSettings;
+use KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\ProcessorException;
 use KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface;
 
 class WebConnector extends AbstractArduinoConnector
@@ -89,6 +90,9 @@ class WebConnector extends AbstractArduinoConnector
         );
     }
 
+    /**
+     * Actions to do just before making cURL request
+     */
     protected function beforeCurl()
     {
         if (!$this->curl) {
@@ -101,6 +105,9 @@ class WebConnector extends AbstractArduinoConnector
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
     }
 
+    /**
+     * Actions to do just after the use of cURL
+     */
     protected function afterCurl()
     {
         if ($this->curl) {
@@ -137,10 +144,16 @@ class WebConnector extends AbstractArduinoConnector
      * @param string $response
      * @param string $query
      * @param int    $time
+     *
+     * @throws ArduinoConnectorException
      */
     protected function processResponse(&$response, $query = null, $time = null)
     {
-        $this->responseHandler->handle($response, $query, $time);
+        try {
+            $this->responseHandler->handle($response, $query, $time);
+        } catch (ProcessorException $exception) {
+            throw new ArduinoConnectorException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
 }

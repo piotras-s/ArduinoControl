@@ -25,5 +25,6 @@ class ArduinoExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('connector_services.yml');
         $loader->load('response_services.yml');
+        $loader->load('statistics_services.yml');
     }
 }

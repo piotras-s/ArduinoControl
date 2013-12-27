@@ -120,4 +120,5 @@ class TemperatureLog
     {
         return $this->value;
     }
+
 }

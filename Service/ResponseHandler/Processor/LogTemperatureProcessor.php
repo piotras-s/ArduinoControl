@@ -35,14 +35,21 @@ class LogTemperatureProcessor implements ProcessorInterface
      */
     protected $entityManager;
 
+    /**
+     * @var string
+     */
+    protected $unidentifiedThermometerName;
+
     public function __construct(
         EntityManager $entityManager, $tempFormat,
-        $thermometerPlaceInFormat = 1, $tempValuePlaceInFormat = 2)
+        $thermometerPlaceInFormat = 1, $tempValuePlaceInFormat = 2,
+        $unindetifiedThermometerName = self::NEW_THERMOMETER_NAME)
     {
         $this->entityManager = $entityManager;
         $this->tempFormat = $tempFormat;
         $this->thermometerPlaceInFormat = $thermometerPlaceInFormat;
         $this->tempValuePlaceInFormat = $tempValuePlaceInFormat;
+        $this->unidentifiedThermometerName = $unindetifiedThermometerName;
     }
 
     /**
@@ -135,7 +142,9 @@ class LogTemperatureProcessor implements ProcessorInterface
             )
         );
         if (!$thermometer) {
-            $thermometer = (new Thermometer())->setSystemId($systemId)->setName(sprintf(self::NEW_THERMOMETER_NAME, $systemId));
+            $thermometer = (new Thermometer())
+                ->setSystemId($systemId)
+                ->setName(sprintf($this->unidentifiedThermometerName, $systemId));
             $this->entityManager->persist($thermometer);
             $this->entityManager->flush();
         }

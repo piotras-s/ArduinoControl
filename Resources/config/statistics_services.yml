@@ -1,0 +1,20 @@
+parameters:
+    arduino.statistics.data_base_giver.class: 'KGzocha\ArduinoBundle\Service\Statistics\DataBaseStatisticsGiver'
+    arduino.statistics.parser.class: 'KGzocha\ArduinoBundle\Service\Statistics\StatisticsParser'
+    arduino.statistics.parser.datetime_to_string.class: 'KGzocha\ArduinoBundle\Service\Statistics\Parsers\DateTimeToStringParser'
+
+services:
+    arduino.statistics.data_base_giver:
+        class:      %arduino.statistics.data_base_giver.class%
+        arguments:  [@doctrine.orm.entity_manager]
+        lazy:       true
+
+    arduino.statistics.parser:
+        class:      %arduino.statistics.parser.class%
+        arguments:  [@arduino.statistics.data_base_giver]
+        lazy:       true
+        calls:
+            - [addParser, [@arduino.statistics.parser.datetime_to_string]]
+
+    arduino.statistics.parser.datetime_to_string:
+        class:      %arduino.statistics.parser.datetime_to_string.class%
