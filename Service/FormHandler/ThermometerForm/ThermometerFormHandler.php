@@ -64,11 +64,6 @@ class ThermometerFormHandler
                 $this->thermometerFieldName => $this->entityManager
                     ->getRepository('ArduinoBundle:Thermometer')
                     ->findFirstThermometer()
-            ),
-            array(
-                'attr' => array(
-                    'id' => $this->thermometerFormAlias,
-                ),
             )
         );
 
