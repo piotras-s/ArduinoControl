@@ -6,7 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\Statistics;
 
 use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Model\StatisticableRepository;
+use KGzocha\ArduinoBundle\Model\StatisticableRepositoryInterface;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\ChartVariables;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\StatisticsException;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\Variable2D;
@@ -30,7 +30,7 @@ class DataBaseStatisticsGiver implements StatisticsGiverInterface
     public function giveStatistics($entity, $id)
     {
         $repository = $this->entityManager->getRepository($entity);
-        if (!$repository instanceof StatisticableRepository) {
+        if (!$repository instanceof StatisticableRepositoryInterface) {
             throw new StatisticsException('Given entity doesnt have proper repository');
         }
 
