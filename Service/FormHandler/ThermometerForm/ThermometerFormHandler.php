@@ -67,7 +67,7 @@ class ThermometerFormHandler
             ),
             array(
                 'attr' => array(
-                    'id' => 'thermometer_form',
+                    'id' => $this->thermometerFormAlias,
                 ),
             )
         );
