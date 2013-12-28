@@ -84,6 +84,42 @@ class LogTemperatureProcessor implements ProcessorInterface
     }
 
     /**
+     * @param int $tempValuePlaceInFormat
+     *
+     * @return LogTemperatureProcessor
+     */
+    public function setTempValuePlaceInFormat($tempValuePlaceInFormat)
+    {
+        $this->tempValuePlaceInFormat = $tempValuePlaceInFormat;
+
+        return $this;
+    }
+
+    /**
+     * @param int $thermometerPlaceInFormat
+     *
+     * @return LogTemperatureProcessor
+     */
+    public function setThermometerPlaceInFormat($thermometerPlaceInFormat)
+    {
+        $this->thermometerPlaceInFormat = $thermometerPlaceInFormat;
+
+        return $this;
+    }
+
+    /**
+     * @param string $unidentifiedThermometerName
+     *
+     * @return LogTemperatureProcessor
+     */
+    public function setUnidentifiedThermometerName($unidentifiedThermometerName)
+    {
+        $this->unidentifiedThermometerName = $unidentifiedThermometerName;
+
+        return $this;
+    }
+
+    /**
      * @param $text
      *
      * @return null

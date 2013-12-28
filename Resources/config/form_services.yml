@@ -7,9 +7,11 @@ parameters:
 services:
     arduino.form.thermometer_form:
         class:  %arduino.form.thermometer_form.class%
+        lazy:   true
         tags:
             - { name: form.type, alias: %arduino.form.thermometer_form.alias% }
 
     arduino.form.handler.thermometer_form:
         class:  %arduino.form.handler.thermometer_form.class%
+        lazy:   true
         arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.thermometer_form.alias%, %arduino.form.handler.thermometer_form.field_name%]

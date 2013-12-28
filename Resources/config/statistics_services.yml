@@ -18,3 +18,4 @@ services:
 
     arduino.statistics.parser.datetime_to_string:
         class:      %arduino.statistics.parser.datetime_to_string.class%
+        lazy:   true

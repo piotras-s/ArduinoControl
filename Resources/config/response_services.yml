@@ -5,7 +5,7 @@ parameters:
     arduino.response.processor.log_temp.temp_format:  '/T([1-9]{1,3}): ([+-]{0,1}[\.0-9]{1,6})/i'
     arduino.response.processor.log_temp.therm_place:  1
     arduino.response.processor.log_temp.value_place:  2
-    arduino.response.processor.log_temp.unindentified_thermometer:  'Unidentified thermometer %d.'
+    arduino.response.processor.log_temp.new_thermometer:  'Unidentified thermometer %d.'
 
 services:
     arduino.response.processor.strip_tags:
@@ -14,13 +14,17 @@ services:
 
     arduino.response.processor.log_temp:
         class:      %arduino.response.processor.log_temp.class%
-        arguments:  [@doctrine.orm.entity_manager, %arduino.response.processor.log_temp.temp_format%, %arduino.response.processor.log_temp.therm_place%, %arduino.response.processor.log_temp.value_place%, %arduino.response.processor.log_temp.unindentified_thermometer%]
+        arguments:  [@doctrine.orm.entity_manager, %arduino.response.processor.log_temp.temp_format%]
         lazy:       true
+        calls:
+            - [setThermometerPlaceInFormat, [%arduino.response.processor.log_temp.therm_place%]]
+            - [setTempValuePlaceInFormat, [%arduino.response.processor.log_temp.value_place%]]
+            - [setUnidentifiedThermometerName, [%arduino.response.processor.log_temp.new_thermometer%]]
 
     arduino.response.response_handler:
         class:      %arduino.response.response_handler.class%
         arguments:  [@doctrine.orm.entity_manager]
         lazy:       true
         calls:
-            - [addProcessor, ['@arduino.response.processor.strip_tags']]
-            - [addProcessor, ['@arduino.response.processor.log_temp']]
+            - [addProcessor, [@arduino.response.processor.strip_tags]]
+            - [addProcessor, [@arduino.response.processor.log_temp]]

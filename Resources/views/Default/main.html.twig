@@ -11,7 +11,7 @@
     {% if repository.numberOfQueries == 0 %}
         No query was made
     {% else %}
-        From <strong>{{ repository.minDate|date() }}</strong> to <strong>{{ repository.maxDate|date() }}</strong>:<br/>
+        From <strong>{{ repository.minDate|date("d.m.Y H:i:s") }}</strong> to <strong>{{ repository.maxDate|date("d.m.Y H:i:s") }}</strong>:<br/>
         Queries count: {{ repository.numberOfQueries }}<br/>
         Avarge query time: {{ timeFormat|format(repository.meanTime, timeUnit) }}<br/>
         Max time: {{ timeFormat|format(repository.maxTime, timeUnit) }}<br/>
@@ -21,12 +21,18 @@
 </div>
 <div class="well">
     <div class="row">
-
-        {{ form_start(form, {'attr': {'role': 'form'} }) }}
         <div class="col-lg-6">
+            {{ form_start(form, {'attr': {'role': 'form'} }) }}
             {{ form_widget(form) }}
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
+        <div class="col-lg-5 text-center">
+            <strong>
+                <a href="{{ path('arduino_main') }}">
+                    <span class="fa fa-refresh"></span> Refresh
+                </a>
+            </strong>
+        </div>
 
     </div>
     <div class="row">
