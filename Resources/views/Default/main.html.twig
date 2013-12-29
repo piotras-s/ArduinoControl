@@ -1,5 +1,6 @@
 {% extends '@Arduino/index.html.twig' %}
 {% form_theme form 'ArduinoBundle:Form:form.html.twig' %}
+{% form_theme pin_form 'ArduinoBundle:Form:form.html.twig' %}
 {% set timeFormat = '%2.2f %s' %}
 {% set timeUnit = 'ms' %}
 
@@ -22,9 +23,7 @@
 <div class="well">
     <div class="row">
         <div class="col-lg-6">
-            {{ form_start(form, {'attr': {'role': 'form'} }) }}
-            {{ form_widget(form) }}
-            {{ form_end(form) }}
+            {{ form(form) }}
         </div>
         <div class="col-lg-5 text-center">
             <strong>
@@ -36,7 +35,23 @@
 
     </div>
     <div class="row">
-        <div id="myfirstchart" style="height: 250px;"></div>
+        <div id="temp_chart" style="height: 250px;"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            {{ form(pin_form) }}
+        </div>
+        <div class="col-lg-5 text-center">
+            <strong>
+                <a href="{{ path('arduino_main') }}">
+                    <span class="fa fa-refresh"></span> Refresh
+                </a>
+            </strong>
+        </div>
+
+    </div>
+    <div class="row">
+        <div id="pin_chart" style="height: 250px;"></div>
     </div>
 </div>
 {% endblock %}
@@ -47,12 +62,15 @@
             $('#thermometer_form_thermometer').change(function () {
                 $('#thermometer_form_thermometer').closest("form").submit();
             });
+            $('#pins_form_pin').change(function () {
+                $('#pins_form_pin').closest("form").submit();
+            });
         });
     </script>
     {% if data is not null %}
         <script>
             new Morris.Area({
-                element: 'myfirstchart',
+                element: 'temp_chart',
                 data: [
                     {{ data|raw }}
                 ],
@@ -60,6 +78,20 @@
                 ykeys: ['y'],
                 xLabels: "day",
                 labels: ['Temperature']
+            });
+        </script>
+    {% endif %}
+    {% if pin_data is not null %}
+        <script>
+            new Morris.Area({
+                element: 'pin_chart',
+                data: [
+                    {{ pin_data|raw }}
+                ],
+                xkey: 'x',
+                ykeys: ['y'],
+                xLabels: "day",
+                labels: ['Volts']
             });
         </script>
     {% endif %}

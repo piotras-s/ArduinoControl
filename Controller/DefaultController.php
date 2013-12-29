@@ -5,6 +5,7 @@ namespace KGzocha\ArduinoBundle\Controller;
 use KGzocha\ArduinoBundle\Entity\TemperatureLog;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorException;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\PinsForm\PinsFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm\ThermometerFormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,17 +51,26 @@ class DefaultController extends Controller
     {
         /** @var ThermometerFormHandler $formHandler */
         $formHandler = $this->get('arduino.form.handler.thermometer_form')->createForm();
-
         $formHandler->handle($request);
         $thermometer = $this->get('arduino.statistics.parser')->getStatistics(
             'ArduinoBundle:TemperatureLog',
             $formHandler->getThermometer()->getId()
         );
 
+        /** @var PinsFormHandler $pinFormHandler */
+        $pinFormHandler = $this->get('arduino.form.handler.pin_status_form')->createForm();
+        $pinFormHandler->handle($request);
+        $pins = $this->get('arduino.statistics.parser')->getStatistics(
+            'ArduinoBundle:PinStatusLog',
+            $pinFormHandler->getPin()->getId()
+        );
+
         return array(
             'repository' => $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog'),
             'data' => $thermometer,
             'form' => $formHandler->getForm()->createView(),
+            'pin_form' => $pinFormHandler->getForm()->createView(),
+            'pin_data' => $pins,
         );
     }
 }

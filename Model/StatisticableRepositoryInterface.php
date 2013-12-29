@@ -10,10 +10,10 @@ interface StatisticableRepositoryInterface
     /**
      * Will return X and Y values
      *
-     * @param null $id
+     * @param int $id
      *
      * @return mixed
      */
-    public function getValues($id = null);
+    public function getValues($id);
 
 }
