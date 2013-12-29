@@ -1,0 +1,55 @@
+{% extends '@Arduino/index.html.twig' %}
+{% if formHandler is defined %}
+    {% set name = formHandler.form.name %}
+{% else %}
+    {% set name = 'something' %}
+{% endif %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Statistics <small>{{ label }}</small></h1>
+        </div>
+    </div>
+
+    {% if form is defined  %}
+        <div class="row">
+            <div class="col-lg-4 well">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Show
+                </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="{{ name }}_chart"></div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+    {% if data is not null %}
+        <script>
+            new Morris.Area({
+                element: '{{ name }}_chart',
+                pointSize: 1,
+                data: [
+                    {{ data|raw }}
+                ],
+                xkey: 'x',
+                ykeys: ['y'],
+                xLabels: "day",
+                labels: ['{{ label }}']
+            });
+        </script>
+    {% endif %}
+
+{% endblock %}

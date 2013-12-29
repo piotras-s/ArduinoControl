@@ -81,7 +81,6 @@ class ResponseLogRepository extends EntityRepository implements StatisticableRep
             ->getArrayResult();
     }
 
-
     /**
      * @param Func $selectExpression
      * @param int  $cacheTime

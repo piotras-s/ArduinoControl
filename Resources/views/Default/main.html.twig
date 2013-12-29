@@ -1,119 +1,22 @@
 {% extends '@Arduino/index.html.twig' %}
-{% form_theme form 'ArduinoBundle:Form:form.html.twig' %}
-{% form_theme pin_form 'ArduinoBundle:Form:form.html.twig' %}
 {% set timeFormat = '%2.2f %s' %}
 {% set timeUnit = 'ms' %}
 
 {% block content %}
 <div class="row">
-    <h1>Main site</h1>
+    <h1>Main site <small>Welcome</small></h1>
 </div>
 <div class="row">
-    {% if repository.numberOfQueries == 0 %}
-        No query was made
-    {% else %}
-        From <strong>{{ repository.minDate|date("d.m.Y H:i:s") }}</strong> to <strong>{{ repository.maxDate|date("d.m.Y H:i:s") }}</strong>:<br/>
-        Queries count: {{ repository.numberOfQueries }}<br/>
-        Avarge query time: {{ timeFormat|format(repository.meanTime, timeUnit) }}<br/>
-        Max time: {{ timeFormat|format(repository.maxTime, timeUnit) }}<br/>
-        Min time: {{ timeFormat|format(repository.minTime, timeUnit) }}<br/>
-    {% endif %}
-    <br/><br/>
-</div>
-<div class="well">
-    <div class="row">
-        <div class="col-lg-6">
-            {{ form(form) }}
-        </div>
-        <div class="col-lg-5 text-center">
-            <strong>
-                <a href="{{ path('arduino_main') }}">
-                    <span class="fa fa-refresh"></span> Refresh
-                </a>
-            </strong>
-        </div>
-
-    </div>
-    <div class="row">
-        <div id="temp_chart" style="height: 250px;"></div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            {{ form(pin_form) }}
-        </div>
-        <div class="col-lg-5 text-center">
-            <strong>
-                <a href="{{ path('arduino_main') }}">
-                    <span class="fa fa-refresh"></span> Refresh
-                </a>
-            </strong>
-        </div>
-
-    </div>
-    <div class="row">
-        <div id="pin_chart" style="height: 250px;"></div>
-    </div>
-    <div class="row">
-        <p>Response time</p>
-        <div id="time_chart" style="height: 250px;"></div>
+    <div class="col-lg-6 well">
+        {% if repository.numberOfQueries == 0 %}
+            No query was made
+        {% else %}
+            <p>From <strong>{{ repository.minDate|date("d.m.Y H:i:s") }}</strong> to <strong>{{ repository.maxDate|date("d.m.Y H:i:s") }}</strong>:</p>
+            <p>Queries count: {{ repository.numberOfQueries }}</p>
+            <p>Avarge query time: {{ timeFormat|format(repository.meanTime, timeUnit) }}</p>
+            <p>Max time: {{ timeFormat|format(repository.maxTime, timeUnit) }}</p>
+            <p>Min time: {{ timeFormat|format(repository.minTime, timeUnit) }}</p>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
-
-{% block javascript %}
-    <script>
-        $(document).ready(function(){
-            $('#thermometer_form_thermometer').change(function () {
-                $('#thermometer_form_thermometer').closest("form").submit();
-            });
-            $('#pins_form_pin').change(function () {
-                $('#pins_form_pin').closest("form").submit();
-            });
-        });
-    </script>
-    {% if data is not null %}
-        <script>
-            new Morris.Area({
-                element: 'temp_chart',
-                pointSize: 1,
-                data: [
-                    {{ data|raw }}
-                ],
-                xkey: 'x',
-                ykeys: ['y'],
-                xLabels: "day",
-                labels: ['Temperature']
-            });
-        </script>
-    {% endif %}
-    {% if pin_data is not null %}
-        <script>
-            new Morris.Area({
-                element: 'pin_chart',
-                pointSize: 1,
-                data: [
-                    {{ pin_data|raw }}
-                ],
-                xkey: 'x',
-                ykeys: ['y'],
-                xLabels: "day",
-                labels: ['Volts']
-            });
-        </script>
-    {% endif %}
-    {% if time_data is not null %}
-        <script>
-            new Morris.Area({
-                element: 'time_chart',
-                pointSize: 1,
-                data: [
-                    {{ time_data|raw }}
-                ],
-                xkey: 'x',
-                ykeys: ['y'],
-                xLabels: "day",
-                labels: ['Time in ms']
-            });
-        </script>
-    {% endif %}
 {% endblock %}
