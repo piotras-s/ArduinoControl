@@ -21,7 +21,7 @@ class StatisticsController extends Controller
         /** @var ThermometerFormHandler $formHandler */
         $formHandler = $this->get('arduino.form.handler.thermometer_form')->createForm();
         $formHandler->handle($request);
-        $data = $this->get('arduino.statistics.parser')->getStatistics(
+        $data = $this->getStatisticsParser()->getStatistics(
             'ArduinoBundle:TemperatureLog',
             $formHandler->getThermometer()->getId()
         );
@@ -44,7 +44,7 @@ class StatisticsController extends Controller
         /** @var ThermometerFormHandler $formHandler */
         $formHandler = $this->get('arduino.form.handler.pin_status_form')->createForm();
         $formHandler->handle($request);
-        $data = $this->get('arduino.statistics.parser')->getStatistics(
+        $data = $this->getStatisticsParser()->getStatistics(
             'ArduinoBundle:PinStatusLog',
             $formHandler->getPin()->getId()
         );
@@ -66,10 +66,18 @@ class StatisticsController extends Controller
     {
         return $this->render('ArduinoBundle:Statistics:data.html.twig',
             array(
-                'data' => $this->get('arduino.statistics.parser')->getStatistics('ArduinoBundle:ResponseLog', 0),
+                'data' => $this->getStatisticsParser()->getStatistics('ArduinoBundle:ResponseLog', 0),
                 'label' => 'Response time in ms',
             )
         );
+    }
+
+    /**
+     * @return \KGzocha\ArduinoBundle\Service\Statistics\StatisticsParser
+     */
+    protected function getStatisticsParser()
+    {
+        return $this->get('arduino.statistics.parser');
     }
 
 }
