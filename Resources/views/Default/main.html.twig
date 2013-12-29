@@ -53,6 +53,10 @@
     <div class="row">
         <div id="pin_chart" style="height: 250px;"></div>
     </div>
+    <div class="row">
+        <p>Response time</p>
+        <div id="time_chart" style="height: 250px;"></div>
+    </div>
 </div>
 {% endblock %}
 
@@ -71,6 +75,7 @@
         <script>
             new Morris.Area({
                 element: 'temp_chart',
+                pointSize: 1,
                 data: [
                     {{ data|raw }}
                 ],
@@ -85,6 +90,7 @@
         <script>
             new Morris.Area({
                 element: 'pin_chart',
+                pointSize: 1,
                 data: [
                     {{ pin_data|raw }}
                 ],
@@ -92,6 +98,21 @@
                 ykeys: ['y'],
                 xLabels: "day",
                 labels: ['Volts']
+            });
+        </script>
+    {% endif %}
+    {% if time_data is not null %}
+        <script>
+            new Morris.Area({
+                element: 'time_chart',
+                pointSize: 1,
+                data: [
+                    {{ time_data|raw }}
+                ],
+                xkey: 'x',
+                ykeys: ['y'],
+                xLabels: "day",
+                labels: ['Time in ms']
             });
         </script>
     {% endif %}
