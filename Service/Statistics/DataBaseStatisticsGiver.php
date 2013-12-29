@@ -6,7 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\Statistics;
 
 use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Model\StatisticableRepositoryInterface;
+use KGzocha\ArduinoBundle\Service\Statistics\StatisticableRepositoryInterface;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\ChartVariables;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\StatisticsException;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\Variable2D;
