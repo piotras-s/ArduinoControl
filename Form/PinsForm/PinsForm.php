@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Form\PinsForm;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -29,7 +28,6 @@ class PinsForm extends AbstractType
         );
     }
 
-
     /**
      * Returns the name of this type.
      *
@@ -41,4 +39,3 @@ class PinsForm extends AbstractType
     }
 
 }
- 

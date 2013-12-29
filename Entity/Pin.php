@@ -35,11 +35,10 @@ class Pin
      */
     private $description;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -49,20 +48,20 @@ class Pin
     /**
      * Set systemId
      *
-     * @param string $systemId
+     * @param  string $systemId
      * @return Pin
      */
     public function setSystemId($systemId)
     {
         $this->systemId = $systemId;
-    
+
         return $this;
     }
 
     /**
      * Get systemId
      *
-     * @return string 
+     * @return string
      */
     public function getSystemId()
     {
@@ -72,20 +71,20 @@ class Pin
     /**
      * Set description
      *
-     * @param string $description
+     * @param  string $description
      * @return Pin
      */
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {

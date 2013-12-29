@@ -9,7 +9,6 @@ use KGzocha\ArduinoBundle\Entity\Thermometer;
 use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
 class ThermometerFormHandler extends AbstractFormHandler implements FormHandlerInterface

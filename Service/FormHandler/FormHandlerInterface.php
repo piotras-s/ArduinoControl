@@ -13,4 +13,3 @@ interface FormHandlerInterface
     public function handle(Request $request);
     public function getForm();
 }
- 

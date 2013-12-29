@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\FormHandler;
 
-
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,4 +35,3 @@ abstract class AbstractFormHandler implements FormHandlerInterface
         return $this->form;
     }
 }
- 

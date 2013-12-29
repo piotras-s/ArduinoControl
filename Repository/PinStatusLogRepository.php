@@ -37,5 +37,4 @@ class PinStatusLogRepository extends EntityRepository implements StatisticableRe
             ->getArrayResult();
     }
 
-
 }

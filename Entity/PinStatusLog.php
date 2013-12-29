@@ -42,11 +42,10 @@ class PinStatusLog
      */
     private $date;
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,13 +55,13 @@ class PinStatusLog
     /**
      * Set pinNumber
      *
-     * @param Pin $pin
+     * @param  Pin          $pin
      * @return PinStatusLog
      */
     public function setPin(Pin $pin)
     {
         $this->pin = $pin;
-    
+
         return $this;
     }
 
@@ -79,20 +78,20 @@ class PinStatusLog
     /**
      * Set value
      *
-     * @param integer $value
+     * @param  integer      $value
      * @return PinStatusLog
      */
     public function setValue($value)
     {
         $this->value = $value;
-    
+
         return $this;
     }
 
     /**
      * Get value
      *
-     * @return integer 
+     * @return integer
      */
     public function getValue()
     {
@@ -102,20 +101,20 @@ class PinStatusLog
     /**
      * Set date
      *
-     * @param \DateTime $date
+     * @param  \DateTime    $date
      * @return PinStatusLog
      */
     public function setDate($date)
     {
         $this->date = $date;
-    
+
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {

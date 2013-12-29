@@ -5,13 +5,11 @@
 
 namespace KGzocha\ArduinoBundle\Service\FormHandler\PinsForm;
 
-
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Pin;
 use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
 
 class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterface
 {
@@ -70,4 +68,3 @@ class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterfac
     }
 
 }
- 

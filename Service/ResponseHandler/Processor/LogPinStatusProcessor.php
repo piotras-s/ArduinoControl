@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\ResponseHandler\Processor;
 
-
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Pin;
 use KGzocha\ArduinoBundle\Entity\PinStatusLog;
@@ -63,7 +62,7 @@ class LogPinStatusProcessor implements ProcessorInterface
      */
     public function supports(&$text)
     {
-        return (bool)preg_match($this->responseFormat, $text);
+        return (bool) preg_match($this->responseFormat, $text);
     }
 
     /**
@@ -161,4 +160,3 @@ class LogPinStatusProcessor implements ProcessorInterface
     }
 
 }
- 

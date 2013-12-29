@@ -4,7 +4,6 @@ namespace KGzocha\ArduinoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use KGzocha\ArduinoBundle\Model\StatisticableRepositoryInterface;
-use KGzocha\ArduinoBundle\Service\Statistics\Model\StatisticsException;
 
 /**
  * TemperatureLogRepository

@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\Statistics\Parsers;
 
-
 use KGzocha\ArduinoBundle\Service\Statistics\Model\Variable2D;
 
 class RoundFloatValuesParser implements StatisticParserInterface
@@ -39,4 +38,3 @@ class RoundFloatValuesParser implements StatisticParserInterface
     }
 
 }
- 
