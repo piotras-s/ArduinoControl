@@ -4,3 +4,6 @@ arduino_homepage:
 
 arduino_statistics:
     resource: "@ArduinoBundle/Controller/StatisticsController.php"
+
+arduino_settings:
+    resource: "@ArduinoBundle/Controller/SettingsController.php"

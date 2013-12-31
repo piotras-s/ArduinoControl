@@ -1,8 +1,13 @@
 {% block form_row %}
 
-    <div class="form-group">
-        <label>{{ label }}</label>
+    {% if errors|length > 0 %}
+        <div class="form-group has-error">
+    {% else %}
+        <div class="form-group">
+    {% endif %}
+        <label class="control-label">{{ label }}</label>
         {{ form_widget(form, {'attr': {'class': 'form-control'} }) }}
+        {{ form_errors(form) }}
     </div>
 
 {% endblock %}

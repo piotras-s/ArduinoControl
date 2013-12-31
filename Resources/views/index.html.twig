@@ -39,7 +39,7 @@
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav side-nav">
             {% block menu %}
-                <li class="active"><a href="{{ path('arduino_main') }}"><i class="fa fa-dashboard"></i> Main site</a></li>
+                <li class="active"><a href="{{ path('arduino_main') }}"><i class="fa fa-home"></i> Main site</a></li>
                 <li><a href="{{ path('arduino_send', {'name': 'Test'}) }}"><i class="fa fa-check"></i> Send value: 'Test'</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart-o"></i> Statistics <b class="caret"></b></a>
@@ -49,6 +49,7 @@
                         <li><a href="{{ path('arduino_stats_time') }}"><i class="fa fa-clock-o"></i> Response Time</a></li>
                     </ul>
                 </li>
+                <li><a href="{{ path('arduino_settings_connector') }}"><i class="fa fa-dashboard"></i> Settings</a></li>
             {% endblock %}
           </ul>
 
