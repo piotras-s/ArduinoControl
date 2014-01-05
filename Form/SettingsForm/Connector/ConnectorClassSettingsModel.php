@@ -42,9 +42,9 @@ class ConnectorClassSettingsModel
      */
     public function validateClass(ExecutionContextInterface $context)
     {
-//        if (!class_exists($this->getClass())) {
-//            $context->addViolationAt('class', 'Given class doesn\'t exists in system');
-//        }
+        if (!class_exists($this->getClass())) {
+            $context->addViolationAt('class', 'Given class doesn\'t exists in system');
+        }
     }
 
 }
