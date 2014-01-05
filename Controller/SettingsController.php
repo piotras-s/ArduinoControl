@@ -14,6 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class SettingsController extends Controller
 {
 
+    const CONNECTOR_SETTINGS_PREFIX = 'connector.';
+
     /**
      * @Route("/settings/connector/class", name="arduino_settings_connector_class")
      * @Template()
@@ -25,7 +27,7 @@ class SettingsController extends Controller
 
         if ($form->isValid()) {
             $this->get('arduino.settings_saver')
-                ->setPrefix('connector.')
+                ->setPrefix(self::CONNECTOR_SETTINGS_PREFIX)
                 ->saveSetting(
                     'class',
                     $form->getData()->getClass()
