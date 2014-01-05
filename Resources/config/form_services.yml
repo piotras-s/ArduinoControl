@@ -14,28 +14,24 @@ parameters:
 
 
 #   Conenctor settings form
-    arduino.connector.settings.class:       'KGzocha\ArduinoBundle\Form\SettingsForm\GroupedSettings\ConnectorSettings'
-    arduino.form.settings.saver.class:      'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver'
-    arduino.form.settings.giver.class:      'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsGiver'
-    arduino.form.handler.connector.class:   'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\ConnectorSettingsFormHandler'
-    arduino.form.settings.connector.alias:  'connector_settings_form'
-    arduino.form.settings.connector.class:  'KGzocha\ArduinoBundle\Form\SettingsForm\ConnectorSettingsForm'
-    # Single settings
-    arduino.form.settings.address.class:  'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\AddressSetting'
+    arduino.settings_saver.class:                   'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver'
+    arduino.form.handler.settings.connector.prefix: 'connector.'
+    arduino.form.settings.connector_class.class:    'KGzocha\ArduinoBundle\Form\SettingsForm\Connector\ConnectorClassSettings'
+    arduino.form.settings.connector_class.alias:    'connector_class_settings'
+    arduino.form.handler.settings.connector.class:  'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\Connector\ConnectorSettingsFormHandler'
+    arduino.form.settings.connector_classes:
+        - 'KGzocha\ArduinoBundle\Service\ArduinoConnector\WebConnector'
 
-    arduino.form.settings.class.class:    'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\ClassSetting'
-    arduino.form.settings.class.web_choice:    'KGzocha\ArduinoBundle\Service\ArduinoConnector\WebConnector'
+    arduino.form.settings.connector.web_connector.methods:
+        - 'GET'
+        - 'POST'
 
-    arduino.form.settings.file_name.class:  'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\FileNameSetting'
+    arduino.form.settings.connector.web_connector.protocols:
+        - 'http'
+        - 'https'
 
-    arduino.form.settings.method.class:   'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\MethodSetting'
-    arduino.form.settings.method.get:     'GET'
-    arduino.form.settings.method.post:    'POST'
-
-    arduino.form.settings.port.class:     'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\PortSetting'
-
-    arduino.form.settings.protocol.class: 'KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\Connector\ProtocolSetting'
-    arduino.form.settings.protocol.http:  'http'
+    arduino.form.settings.connector.web_connector.class:  'KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\SettingsForms\WebConnectorForm'
+    arduino.form.settings.connector.web_connector.alias:  'connector_settings_web_connector'
 
 services:
     arduino.form.thermometer_form:
@@ -50,10 +46,10 @@ services:
         arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.thermometer_form.alias%, %arduino.form.handler.thermometer_form.field_name%]
 
     arduino.form.pin_status_form:
-            class:  %arduino.form.pin_status_form.class%
-            lazy:   true
-            tags:
-                - { name: form.type, alias: %arduino.form.pin_status_form.alias% }
+        class:  %arduino.form.pin_status_form.class%
+        lazy:   true
+        tags:
+            - { name: form.type, alias: %arduino.form.pin_status_form.alias% }
 
     arduino.form.handler.pin_status_form:
         class:  %arduino.form.handler.pin_status_form.class%
@@ -62,65 +58,31 @@ services:
 
 #   Settings form
 
-    arduino.form.settings.saver:
-        class:  %arduino.form.settings.saver.class%
+    arduino.settings_saver:
+        class:  %arduino.settings_saver.class%
         lazy:   true
-        arguments:  [@doctrine.orm.entity_manager]
+        arguments: [@doctrine.orm.entity_manager]
 
-    arduino.form.settings.giver:
-        class:  %arduino.form.settings.giver.class%
-        lazy:   true
-        arguments:  [@doctrine.orm.entity_manager]
-
-    arduino.connector.settings:
-        class:  %arduino.connector.settings.class%
-        lazy:   true
-
-    arduino.form.handler.connector:
-        class:  %arduino.form.handler.connector.class%
-        lazy:   true
-        arguments: [@form.factory, @arduino.connector.settings, @arduino.form.settings.saver, @arduino.form.settings.giver]
-
-    arduino.form.settings.connector:
-        class:  %arduino.form.settings.connector.class%
+    arduino.form.settings.connector_class:
+        class:  %arduino.form.settings.connector_class.class%
         lazy:   true
         tags:
-            - { name: form.type, alias: %arduino.form.settings.connector.alias% }
+            - { name: form.type, alias: %arduino.form.settings.connector_class.alias% }
         calls:
-            - [addSingleSetting, [@arduino.form.settings.class]]
-            - [addSingleSetting, [@arduino.form.settings.method]]
-            - [addSingleSetting, [@arduino.form.settings.protocol]]
-            - [addSingleSetting, [@arduino.form.settings.address]]
-            - [addSingleSetting, [@arduino.form.settings.port]]
-            - [addSingleSetting, [@arduino.form.settings.file_name]]
+            - [setChoiceList, [%arduino.form.settings.connector_classes%]]
 
-    arduino.form.settings.address:
-        class:  %arduino.form.settings.address.class%
+    arduino.form.settings.connector.web_connector:
+        class:  %arduino.form.settings.connector.web_connector.class%
         lazy:   true
-
-    arduino.form.settings.class:
-        class:  %arduino.form.settings.class.class%
-        lazy:   true
+        tags:
+            - { name: form.type, alias: %arduino.form.settings.connector.web_connector.alias% }
         calls:
-            - [addClassChoice, [%arduino.form.settings.class.web_choice%]]
+            - [setMethods, [%arduino.form.settings.connector.web_connector.methods%]]
+            - [setProtocols, [%arduino.form.settings.connector.web_connector.protocols%]]
 
-    arduino.form.settings.file_name:
-        class:  %arduino.form.settings.file_name.class%
+    arduino.form.handler.settings.connector:
+        class:  %arduino.form.handler.settings.connector.class%
         lazy:   true
-
-    arduino.form.settings.method:
-        class:  %arduino.form.settings.method.class%
-        lazy:   true
+        arguments: [@form.factory, @arduino.settings_saver, @doctrine.orm.entity_manager, %arduino.form.handler.settings.connector.prefix%]
         calls:
-            - [addMethod, [%arduino.form.settings.method.get%]]
-            - [addMethod, [%arduino.form.settings.method.post%]]
-
-    arduino.form.settings.port:
-        class:  %arduino.form.settings.port.class%
-        lazy:   true
-
-    arduino.form.settings.protocol:
-        class:  %arduino.form.settings.protocol.class%
-        lazy:   true
-        calls:
-            - [addProtocol, [%arduino.form.settings.protocol.http%]]
+            - [addConenctorSettingsClass, [@arduino.connector.settings.web_from_db]]

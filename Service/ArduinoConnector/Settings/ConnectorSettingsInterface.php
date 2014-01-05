@@ -8,4 +8,6 @@ namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings;
 interface ConnectorSettingsInterface
 {
     public function getConnectorClass();
+    public function getFormAlias();
+    public function getFieldsToSave();
 }

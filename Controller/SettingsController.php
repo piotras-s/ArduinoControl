@@ -5,6 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
+use KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,19 +15,61 @@ class SettingsController extends Controller
 {
 
     /**
-     * @Route("/settings/connector", name="arduino_settings_connector")
+     * @Route("/settings/connector/class", name="arduino_settings_connector_class")
      * @Template()
      */
-    public function connectorSettingsAction(Request $request)
+    public function connectorClassAction(Request $request)
     {
-        $formHandler = $this->get('arduino.form.handler.connector')->createForm();
-        if ($formHandler->handle($request)) {
-            $formHandler->saveSettings();
+        $form = $this->createForm('connector_class_settings');
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->get('arduino.settings_saver')
+                ->setPrefix('connector.')
+                ->saveSetting(
+                    'class',
+                    $form->getData()->getClass()
+                );
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->successFlash();
+        }
+
+        return array(
+            'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * @Route("/settings/connector/params", name="arduino_settings_connector_params")
+     * @Template()
+     */
+    public function connectorParamsAction(Request $request)
+    {
+        try {
+            $formHandler = $this->get('arduino.form.handler.settings.connector')->createForm();
+            if ($formHandler->handle($request)) {
+                $this->successFlash();
+            }
+        } catch (SettingsException $exception) {
+            $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
+
+            return $this->redirect(
+                $this->generateUrl('arduino_settings_connector_class')
+            );
         }
 
         return array(
             'form' => $formHandler->getForm()->createView(),
         );
+    }
+
+    /**
+     * Adds success flash message
+     */
+    public function successFlash()
+    {
+        $this->get('session')->getFlashBag()->add('success', 'Settings were successfuly saved');
     }
 
 }

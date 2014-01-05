@@ -6,95 +6,86 @@
 namespace KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm;
 
 use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Form\SettingsForm\SingleSettings\SettingsGroupInterface;
+use KGzocha\ArduinoBundle\Entity\Settings;
 
-class SettingsSaver implements SettingsSaverInterface
+class SettingsSaver
 {
 
     /**
-     * @var EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var string
+     */
+    protected $prefix;
 
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->configuration = array();
     }
 
     /**
-     * @param SettingsGroupInterface $settingsGroup
+     * @param $prefix
+     *
+     * @return $this
      */
-    public function saveSettings(SettingsGroupInterface $settingsGroup)
+    public function setPrefix($prefix)
     {
-        foreach ($settingsGroup->getFields() as $field) {
-            $getterMethod = $this->getGetterMethod($field);
-            $setting = $this->getOrCreateSetting(
-                $settingsGroup->getPrefix(),
-                $field,
-                $settingsGroup->$getterMethod()
-            );
+        $this->prefix = $prefix;
 
-            $this->entityManager->persist($setting);
+        return $this;
+    }
+
+    /**
+     * Saves prefixed setting into db
+     * @param $key
+     * @param $value
+     */
+    public function saveSetting($key, $value)
+    {
+        $setting = $this->getSetting($key);
+        if (!$setting) {
+            $setting = new Settings();
         }
 
+        $setting->setName(sprintf('%s%s', $this->prefix, $key))->setValue($value);
+        $this->entityManager->persist($setting);
+    }
+
+    /**
+     * @param \stdClass $object
+     * @param array     $fields
+     */
+    public function saveSettingsFormClass($object, array $fields)
+    {
+        foreach ($fields as $field) {
+            $getterMethod = sprintf('%s%s', 'get', ucfirst($field));
+            $this->saveSetting(
+                $field,
+                $object->$getterMethod()
+            );
+        }
+
+        $this->flush();
+    }
+
+    public function flush()
+    {
         $this->entityManager->flush();
     }
 
     /**
-     * @param $prefix
-     * @param $name
-     * @param $value
+     * @param $key
      *
-     * @return mixed
+     * @return \KGzocha\ArduinoBundle\Entity\Settings
      */
-    protected function getOrCreateSetting($prefix, $name, $value)
+    protected function getSetting($key)
     {
-        $name = $this->getPrefixed($prefix, $name);
-
-        foreach ($this->getSavedFields($prefix) as $setting) {
-            if ($name === $setting->getName()) {
-                $setting->setValue($value);
-
-                return $setting;
-            }
-        }
-
-        return (new Settings())->setName($name)->setValue($value);
-    }
-
-    /**
-     * @param $prefix
-     *
-     * @return array
-     */
-    protected function getSavedFields($prefix)
-    {
-        return $this
-            ->entityManager
-            ->getRepository('ArduinoBundle:Settings')
-            ->findAllByPrefix($prefix);
-    }
-
-    /**
-     * @param $field
-     *
-     * @return string
-     */
-    protected function getGetterMethod($field)
-    {
-        return sprintf('%s%s', 'get', ucfirst($field));
-    }
-
-    /**
-     * @param $prefix
-     * @param $name
-     *
-     * @return string
-     */
-    protected function getPrefixed($prefix, $name)
-    {
-        return sprintf('%s%s', $prefix, $name);
+        return $this->entityManager->getRepository('ArduinoBundle:Settings')->findOneBy(array(
+                'name' => sprintf('%s%s', $this->prefix, $key)
+            ));
     }
 
 }

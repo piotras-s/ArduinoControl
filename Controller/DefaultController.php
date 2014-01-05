@@ -50,4 +50,5 @@ class DefaultController extends Controller
             'repository' => $this->get('doctrine')->getRepository('ArduinoBundle:ResponseLog'),
         );
     }
+
 }

@@ -30,6 +30,7 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
     {
         $this->em = $em;
         $this->settingsPrefix = $settingsPrefix;
+        $this->getSettings();
     }
 
     /**
@@ -66,7 +67,7 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
             }
         }
 
-        throw new ArduinoConnectorException(sprintf('Missing %s connector parameter', $key));
+//        throw new ArduinoConnectorException(sprintf('Missing %s connector parameter', $key));
     }
 
 }

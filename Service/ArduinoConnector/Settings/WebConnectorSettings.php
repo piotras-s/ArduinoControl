@@ -5,18 +5,65 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class WebConnectorSettings implements ConnectorSettingsInterface
 {
 
+    /**
+     * @var string
+     * @Assert\Regex("/^http[s]{0,1}$/")
+     */
     protected $protocol = 'http';
+
+    /**
+     * @var string
+     * @Assert\Regex("/^[a-z0-9_\.\-\/]{1,255}$/i")
+     */
     protected $address = 'onet.pl';
+
+    /**
+     * @var int
+     * @Assert\Range(min=0, max=25000)
+     */
     protected $port = 80;
+
+    /**
+     * @var string
+     * @Assert\Regex("/^[a-z0-9_\.\-\/]{1,255}$/i")
+     */
     protected $fileName = 'index.html';
+
+    /**
+     * @var string
+     * @Assert\Regex("/(GET|POST)/")
+     */
     protected $method = 'GET';
 
+    /**
+     * @return string
+     */
     public function getConnectorClass()
     {
         return 'KGzocha\ArduinoBundle\Service\ArduinoConnector\WebConnector';
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormAlias()
+    {
+        return 'connector_settings_web_connector';
+    }
+
+    /**
+     * @return array
+     */
+    public function getFieldsToSave()
+    {
+        return array(
+            'protocol', 'address', 'port', 'fileName', 'method'
+        );
     }
 
     /**
