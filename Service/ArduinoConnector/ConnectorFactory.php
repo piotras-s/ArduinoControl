@@ -54,7 +54,7 @@ class ConnectorFactory
      */
     public function getConnectorFromDatabase()
     {
-        return $this->getConnector($this->settingsFromDatabase->getSettings());
+        return $this->getConnector($this->settingsFromDatabase);
     }
 
 }

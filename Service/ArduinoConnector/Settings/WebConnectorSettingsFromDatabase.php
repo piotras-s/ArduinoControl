@@ -34,21 +34,18 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
     }
 
     /**
-     * @return WebConnector
+     * @return WebConnectorSettingsFromDatabase
      */
-    public function getSettings()
+    protected function getSettings()
     {
         $this->configuration = $this
             ->em
             ->getRepository('KGzocha\ArduinoBundle\Entity\Settings')
             ->findAllByPrefix($this->settingsPrefix);
 
-        return $this
-            ->setAddress($this->getSingleSetting('address'))
-            ->setProtocol($this->getSingleSetting('protocol'))
-            ->setPort($this->getSingleSetting('port'))
-            ->setFileName($this->getSingleSetting('fileName'))
-            ->setMethod($this->getSingleSetting('method'));
+        $this->setFieldsValue($this->getFieldsToSave());
+
+        return $this;
     }
 
     /**
@@ -67,7 +64,22 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
             }
         }
 
-//        throw new ArduinoConnectorException(sprintf('Missing %s connector parameter', $key));
+        throw new ArduinoConnectorException(sprintf('Missing %s connector parameter', $key));
+    }
+
+    /**
+     * @param array $fields
+     */
+    protected function setFieldsValue(array $fields)
+    {
+        foreach ($fields as $field) {
+            $setter = sprintf('%s%s', 'set', ucfirst($field));
+            try {
+                $this->$setter($this->getSingleSetting($field));
+            } catch (ArduinoConnectorException $exception) {
+
+            }
+        }
     }
 
 }
