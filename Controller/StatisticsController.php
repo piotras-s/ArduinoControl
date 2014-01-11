@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
-use KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm\ThermometerFormHandler;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
