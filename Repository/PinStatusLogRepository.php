@@ -20,20 +20,35 @@ class PinStatusLogRepository extends EntityRepository implements StatisticableRe
     /**
      * Will return X and Y values
      *
-     * @param int $id
+     * @param int       $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
      *
      * @return mixed
      */
-    public function getValues($id)
+    public function getValues($id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
-        return $this->createQueryBuilder('ps')
+        $query = $this->createQueryBuilder('ps')
             ->select('ps.date as x')
             ->addSelect('ps.value * :factor as y')
             ->join('ps.pin', 'p')
             ->where('p.id = :id')
             ->setParameter('id', $id)
-            ->setParameter('factor', self::MAX_VOLTAGE / self::RESOLUTION)
+            ->setParameter('factor', self::MAX_VOLTAGE / self::RESOLUTION);
+
+        if ($dateFrom) {
+            $query->andWhere('ps.date >= :dateFrom');
+            $query->setParameter(':dateFrom', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->andWhere('ps.date <= :dateTo');
+            $query->setParameter(':dateTo', $dateTo);
+        }
+
+        return $query
             ->getQuery()
+            ->useResultCache(true, 60)
             ->getArrayResult();
     }
 

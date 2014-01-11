@@ -1,16 +1,16 @@
 parameters:
+    arduino.statistics.date_range:        7
+
 #   Thermometer
     arduino.form.thermometer_form.class:  'KGzocha\ArduinoBundle\Form\ThermometerForm\ThermometerForm'
     arduino.form.thermometer_form.alias:  'thermometer_form'
     arduino.form.handler.thermometer_form.class:      'KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm\ThermometerFormHandler'
-    arduino.form.handler.thermometer_form.field_name: 'thermometer'
 
 
 #   Pin status log
     arduino.form.pin_status_form.class:   'KGzocha\ArduinoBundle\Form\PinsForm\PinsForm'
     arduino.form.pin_status_form.alias:   'pins_form'
     arduino.form.handler.pin_status_form.class:         'KGzocha\ArduinoBundle\Service\FormHandler\PinsForm\PinsFormHandler'
-    arduino.form.handler.pin_status_form.field_name:    'pin'
 
 
 #   Conenctor settings form
@@ -37,24 +37,26 @@ services:
     arduino.form.thermometer_form:
         class:  %arduino.form.thermometer_form.class%
         lazy:   true
+        arguments: [%arduino.form.thermometer_form.alias%]
         tags:
             - { name: form.type, alias: %arduino.form.thermometer_form.alias% }
 
     arduino.form.handler.thermometer_form:
         class:  %arduino.form.handler.thermometer_form.class%
         lazy:   true
-        arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.thermometer_form.alias%, %arduino.form.handler.thermometer_form.field_name%]
+        arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.thermometer_form.alias%, %arduino.statistics.date_range%]
 
     arduino.form.pin_status_form:
         class:  %arduino.form.pin_status_form.class%
         lazy:   true
+        arguments: [%arduino.form.pin_status_form.alias%]
         tags:
             - { name: form.type, alias: %arduino.form.pin_status_form.alias% }
 
     arduino.form.handler.pin_status_form:
         class:  %arduino.form.handler.pin_status_form.class%
         lazy:   true
-        arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.pin_status_form.alias%, %arduino.form.handler.pin_status_form.field_name%]
+        arguments: [@form.factory, @doctrine.orm.entity_manager, %arduino.form.pin_status_form.alias%, %arduino.statistics.date_range%]
 
 #   Settings form
 

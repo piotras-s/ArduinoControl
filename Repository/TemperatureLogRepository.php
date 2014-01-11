@@ -16,19 +16,34 @@ class TemperatureLogRepository extends EntityRepository implements Statisticable
     /**
      * Will return X and Y values
      *
-     * @param int $id
+     * @param int       $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
      *
      * @return mixed
      */
-    public function getValues($id)
+    public function getValues($id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
-        return $this->createQueryBuilder('tl')
+        $query = $this->createQueryBuilder('tl')
             ->select('tl.date as x')
             ->addSelect('tl.value as y')
             ->join('tl.thermometer', 't')
             ->where('t.id = :id')
-            ->setParameter('id', $id)
+            ->setParameter('id', $id);
+
+        if ($dateFrom) {
+            $query->andWhere('tl.date >= :dateFrom');
+            $query->setParameter(':dateFrom', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->andWhere('tl.date <= :dateTo');
+            $query->setParameter(':dateTo', $dateTo);
+        }
+
+        return $query
             ->getQuery()
+            ->useResultCache(true, 60)
             ->getArrayResult();
     }
 

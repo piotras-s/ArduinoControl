@@ -5,10 +5,10 @@
 
 namespace KGzocha\ArduinoBundle\Form\ThermometerForm;
 
-use Symfony\Component\Form\AbstractType;
+use KGzocha\ArduinoBundle\Form\StatisticsForm;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ThermometerForm extends AbstractType
+class ThermometerForm extends StatisticsForm
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,22 +16,13 @@ class ThermometerForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('thermometer', 'entity', array(
-                'class' => 'ArduinoBundle:Thermometer',
-                'property' => 'name',
-                'label' => 'Thermometer',
-                'required' => true,
+        parent::buildForm($builder, array_merge(
+                $options, array(
+                    'label' => 'Thermometer',
+                    'class' => 'ArduinoBundle:Thermometer',
+                    'property' => 'name',
+                )
             ));
-    }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'thermometer_form';
     }
 
 }

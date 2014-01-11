@@ -67,15 +67,29 @@ class ResponseLogRepository extends EntityRepository implements StatisticableRep
     /**
      * Will return X and Y values
      *
-     * @param int $id
+     * @param int       $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
      *
      * @return mixed
      */
-    public function getValues($id = null)
+    public function getValues($id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
-        return $this->createQueryBuilder('rl')
+        $query = $this->createQueryBuilder('rl')
             ->select('rl.time as y')
-            ->addSelect('rl.date as x')
+            ->addSelect('rl.date as x');
+
+        if ($dateFrom) {
+            $query->andWhere('rl.date >= :dateFrom');
+            $query->setParameter(':dateFrom', $dateFrom);
+        }
+
+        if ($dateTo) {
+            $query->andWhere('rl.date <= :dateTo');
+            $query->setParameter(':dateTo', $dateTo);
+        }
+
+        return $query
             ->getQuery()
             ->useResultCache(true, 60)
             ->getArrayResult();

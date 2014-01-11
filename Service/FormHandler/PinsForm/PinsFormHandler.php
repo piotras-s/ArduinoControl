@@ -7,15 +7,15 @@ namespace KGzocha\ArduinoBundle\Service\FormHandler\PinsForm;
 
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Pin;
-use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
+use KGzocha\ArduinoBundle\Form\StatisticsFormModel;
+use KGzocha\ArduinoBundle\Service\FormHandler\AbstractStatisticsFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\StatisticsFormHanlderInterface;
 use Symfony\Component\Form\FormFactory;
 
-class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterface
+class PinsFormHandler extends AbstractStatisticsFormHandler implements FormHandlerInterface,
+    StatisticsFormHanlderInterface
 {
-
-    const PINS_FORM_ALIAS = 'pins_form';
-    const PIN_FIELD_NAME = 'pin';
 
     /**
      * @var \Symfony\Component\Form\FormFactory
@@ -27,19 +27,25 @@ class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterfac
      */
     protected $entityManager;
 
+    /**
+     * @var string
+     */
     protected $formAlias;
-    protected $pinFieldName;
+
+    /**
+     * @var int
+     */
+    protected $dateRange;
 
     public function __construct(
         FormFactory $formFactory,
         EntityManager $entityManager,
-        $formAlias = self::PINS_FORM_ALIAS,
-        $pinFieldName = self::PIN_FIELD_NAME)
+        $formAlias, $dateRange)
     {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->formAlias = $formAlias;
-        $this->pinFieldName = $pinFieldName;
+        $this->dateRange = $dateRange;
     }
 
     /**
@@ -47,13 +53,17 @@ class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterfac
      */
     public function createForm()
     {
+        $formModel = (new StatisticsFormModel())
+            ->setEntity($this->entityManager
+                    ->getRepository($this->getEntityName())
+                    ->findFirstPin()
+            )
+            ->setDateFrom(new \DateTime(sprintf('-%d days', $this->dateRange)))
+            ->setDateTo(new \DateTime());
+
         $this->form = $this->formFactory->create(
             $this->formAlias,
-            array(
-                $this->pinFieldName => $this->entityManager
-                        ->getRepository('ArduinoBundle:Pin')
-                        ->findFirstPin()
-            )
+            $formModel
         );
 
         return $this;
@@ -64,7 +74,23 @@ class PinsFormHandler extends AbstractFormHandler implements FormHandlerInterfac
      */
     public function getPin()
     {
-        return $this->form->getData()[$this->pinFieldName];
+        return $this->form->getData()->getEntity();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatisticsEntityName()
+    {
+        return 'ArduinoBundle:PinStatusLog';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEntityName()
+    {
+        return 'ArduinoBundle:Pin';
     }
 
 }

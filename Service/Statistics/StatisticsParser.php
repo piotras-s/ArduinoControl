@@ -5,6 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\Statistics;
 
+use KGzocha\ArduinoBundle\Service\FormHandler\StatisticsFormHanlderInterface;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\Variable2D;
 use KGzocha\ArduinoBundle\Service\Statistics\Parsers\StatisticParserInterface;
 
@@ -26,16 +27,32 @@ class StatisticsParser
     }
 
     /**
-     * @param mixed $entity
-     *
-     * @param int $id
+     * @param StatisticsFormHanlderInterface $handler
      *
      * @return array
      */
-    public function getStatistics($entity, $id)
+    public function getStatisticsFromHandler(StatisticsFormHanlderInterface $handler)
+    {
+        return $this->getStatistics(
+            $handler->getStatisticsEntityName(),
+            $handler->getId(),
+            $handler->getDateFrom(),
+            $handler->getDateTo()
+        );
+    }
+
+    /**
+     * @param mixed     $entity
+     * @param int       $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
+     *
+     * @return array
+     */
+    public function getStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $result = '';
-        foreach ($this->statisticsGiver->giveStatistics($entity, $id) as $variable) {
+        foreach ($this->statisticsGiver->giveStatistics($entity, $id, $dateFrom, $dateTo) as $variable) {
 
             $this->parse($variable);
             $result .= json_encode($variable). ",\n";

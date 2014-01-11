@@ -6,26 +6,20 @@ namespace KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm;
 
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Thermometer;
-use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
+use KGzocha\ArduinoBundle\Form\StatisticsFormModel;
+use KGzocha\ArduinoBundle\Service\FormHandler\AbstractStatisticsFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\StatisticsFormHanlderInterface;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\Form;
 
-class ThermometerFormHandler extends AbstractFormHandler implements FormHandlerInterface
+class ThermometerFormHandler extends AbstractStatisticsFormHandler implements FormHandlerInterface,
+    StatisticsFormHanlderInterface
 {
-
-    const THERMOMETER_FIELD_NAME = 'thermometer';
-    const THERMOMETER_FORM_NAME = 'thermometer_form';
 
     /**
      * @var FormFactory
      */
     protected $formFactory;
-
-    /**
-     * @var string
-     */
-    protected $thermometerFieldName;
 
     /**
      * @var EntityManager
@@ -37,16 +31,20 @@ class ThermometerFormHandler extends AbstractFormHandler implements FormHandlerI
      */
     protected $thermometerFormAlias;
 
+    /**
+     * @var int
+     */
+    protected $dateRange;
+
     public function __construct(
         FormFactory $formFactory,
         EntityManager $entityManager,
-        $thermometerFormName = self::THERMOMETER_FORM_NAME,
-        $thermometerFieldName = self::THERMOMETER_FIELD_NAME)
+        $thermometerFormName, $dateRange)
     {
-        $this->thermometerFieldName = $thermometerFieldName;
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
         $this->thermometerFormAlias = $thermometerFormName;
+        $this->dateRange = $dateRange;
     }
 
     /**
@@ -54,16 +52,28 @@ class ThermometerFormHandler extends AbstractFormHandler implements FormHandlerI
      */
     public function createForm()
     {
-        $this->form = $this->formFactory->create(
-            $this->thermometerFormAlias,
-            array(
-                $this->thermometerFieldName => $this->entityManager
-                    ->getRepository('ArduinoBundle:Thermometer')
+        $formModel = (new StatisticsFormModel())
+            ->setEntity($this->entityManager
+                    ->getRepository($this->getEntityName())
                     ->findFirstThermometer()
             )
+            ->setDateFrom(new \DateTime(sprintf('-%d days', $this->dateRange)))
+            ->setDateTo(new \DateTime());
+
+        $this->form = $this->formFactory->create(
+            $this->thermometerFormAlias,
+            $formModel
         );
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatisticsEntityName()
+    {
+        return 'ArduinoBundle:TemperatureLog';
     }
 
     /**
@@ -71,7 +81,15 @@ class ThermometerFormHandler extends AbstractFormHandler implements FormHandlerI
      */
     public function getThermometer()
     {
-        return $this->form->getData()[$this->thermometerFieldName];
+        return $this->form->getData()->getEntity();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getEntityName()
+    {
+        return 'ArduinoBundle:Thermometer';
     }
 
 }

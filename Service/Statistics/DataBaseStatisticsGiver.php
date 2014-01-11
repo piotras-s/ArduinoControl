@@ -27,7 +27,7 @@ class DataBaseStatisticsGiver implements StatisticsGiverInterface
     /**
      * @inheritdoc
      */
-    public function giveStatistics($entity, $id)
+    public function giveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $repository = $this->entityManager->getRepository($entity);
         if (!$repository instanceof StatisticableRepositoryInterface) {
@@ -35,7 +35,7 @@ class DataBaseStatisticsGiver implements StatisticsGiverInterface
         }
 
         $result = new ChartVariables();
-        foreach ($repository->getValues($id) as $variable) {
+        foreach ($repository->getValues($id, $dateFrom, $dateTo) as $variable) {
             if (array_key_exists('x', $variable) && array_key_exists('y', $variable)) {
                 $result->insert((new Variable2D())
                         ->setX($variable['x'])

@@ -19,11 +19,11 @@ class StatisticsController extends Controller
     public function thermometerStatsAction(Request $request)
     {
         /** @var ThermometerFormHandler $formHandler */
-        $formHandler = $this->get('arduino.form.handler.thermometer_form')->createForm();
+        $formHandler = $this->getThermometerFormHandler()->createForm();
         $formHandler->handle($request);
-        $data = $this->getStatisticsParser()->getStatistics(
-            'ArduinoBundle:TemperatureLog',
-            $formHandler->getThermometer()->getId()
+
+        $data = $this->getStatisticsParser()->getStatisticsFromHandler(
+            $formHandler
         );
 
         return $this->render('ArduinoBundle:Statistics:data.html.twig',
@@ -42,11 +42,11 @@ class StatisticsController extends Controller
     public function pinStatsAction(Request $request)
     {
         /** @var ThermometerFormHandler $formHandler */
-        $formHandler = $this->get('arduino.form.handler.pin_status_form')->createForm();
+        $formHandler = $this->getPinFormHandler()->createForm();
         $formHandler->handle($request);
-        $data = $this->getStatisticsParser()->getStatistics(
-            'ArduinoBundle:PinStatusLog',
-            $formHandler->getPin()->getId()
+
+        $data = $this->getStatisticsParser()->getStatisticsFromHandler(
+            $formHandler
         );
 
         return $this->render('ArduinoBundle:Statistics:data.html.twig',
@@ -78,6 +78,22 @@ class StatisticsController extends Controller
     protected function getStatisticsParser()
     {
         return $this->get('arduino.statistics.parser');
+    }
+
+    /**
+     * @return ThermometerFormHandler
+     */
+    protected function getThermometerFormHandler()
+    {
+        return $this->get('arduino.form.handler.thermometer_form');
+    }
+
+    /**
+     * @return \KGzocha\ArduinoBundle\Service\FormHandler\PinsForm\PinsFormHandler
+     */
+    protected function getPinFormHandler()
+    {
+        return $this->get('arduino.form.handler.pin_status_form');
     }
 
 }
