@@ -5,10 +5,10 @@
 
 namespace KGzocha\ArduinoBundle\Form\ThermometerForm;
 
-use KGzocha\ArduinoBundle\Form\StatisticsForm;
+use KGzocha\ArduinoBundle\Form\AbstractStatisticsForm;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ThermometerForm extends StatisticsForm
+class ThermometerForm extends AbstractStatisticsForm
 {
     /**
      * @param FormBuilderInterface $builder

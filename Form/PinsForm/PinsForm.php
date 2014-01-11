@@ -5,10 +5,10 @@
 
 namespace KGzocha\ArduinoBundle\Form\PinsForm;
 
-use KGzocha\ArduinoBundle\Form\StatisticsForm;
+use KGzocha\ArduinoBundle\Form\AbstractStatisticsForm;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class PinsForm extends StatisticsForm
+class PinsForm extends AbstractStatisticsForm
 {
     /**
      * @param FormBuilderInterface $builder
