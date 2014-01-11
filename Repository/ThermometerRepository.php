@@ -16,7 +16,7 @@ class ThermometerRepository extends EntityRepository
     /**
      * @return Thermometer|null
      */
-    public function findFirstThermometer()
+    public function findFirst()
     {
         return $this->createQueryBuilder('t')
             ->orderBy('t.id', 'asc')

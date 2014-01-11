@@ -1,9 +1,9 @@
 parameters:
     arduino.statistics.data_base_giver.class: 'KGzocha\ArduinoBundle\Service\Statistics\DataBaseStatisticsGiver'
-    arduino.statistics.parser.class: 'KGzocha\ArduinoBundle\Service\Statistics\StatisticsParser'
+    arduino.statistics.parser.class:          'KGzocha\ArduinoBundle\Service\Statistics\StatisticsParser'
     arduino.statistics.parser.datetime_to_string.class: 'KGzocha\ArduinoBundle\Service\Statistics\Parsers\DateTimeToStringParser'
-    arduino.statistics.parser.round_float.class: 'KGzocha\ArduinoBundle\Service\Statistics\Parsers\RoundFloatValuesParser'
-    arduino.statistics.parser.round_float.format: '%2.3f'
+    arduino.statistics.parser.round_float.class:        'KGzocha\ArduinoBundle\Service\Statistics\Parsers\RoundFloatValuesParser'
+    arduino.statistics.parser.round_float.format:       '%2.3f'
 
 services:
     arduino.statistics.data_base_giver:

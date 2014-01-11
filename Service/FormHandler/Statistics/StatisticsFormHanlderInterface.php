@@ -3,7 +3,7 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Service\FormHandler;
+namespace KGzocha\ArduinoBundle\Service\FormHandler\Statistics;
 
 interface StatisticsFormHanlderInterface
 {

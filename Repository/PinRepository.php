@@ -16,7 +16,7 @@ class PinRepository extends EntityRepository
     /**
      * @return mixed
      */
-    public function findFirstPin()
+    public function findFirst()
     {
         return $this->createQueryBuilder('p')
             ->orderBy('p.systemId', 'asc')

@@ -2,14 +2,13 @@
 /**
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
-namespace KGzocha\ArduinoBundle\Service\FormHandler\ThermometerForm;
+namespace KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm;
 
-use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Thermometer;
-use KGzocha\ArduinoBundle\Form\StatisticsFormModel;
-use KGzocha\ArduinoBundle\Service\FormHandler\AbstractStatisticsFormHandler;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\AbstractStatisticsFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
-use KGzocha\ArduinoBundle\Service\FormHandler\StatisticsFormHanlderInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormHanlderInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormModelCreator;
 use Symfony\Component\Form\FormFactory;
 
 class ThermometerFormHandler extends AbstractStatisticsFormHandler implements FormHandlerInterface,
@@ -22,29 +21,23 @@ class ThermometerFormHandler extends AbstractStatisticsFormHandler implements Fo
     protected $formFactory;
 
     /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
      * @var string
      */
     protected $thermometerFormAlias;
 
     /**
-     * @var int
+     * @var StatisticsFormModelCreator
      */
-    protected $dateRange;
+    protected $formModelCreator;
 
     public function __construct(
         FormFactory $formFactory,
-        EntityManager $entityManager,
-        $thermometerFormName, $dateRange)
+        StatisticsFormModelCreator $formModelCreator,
+        $thermometerFormName)
     {
         $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
+        $this->formModelCreator = $formModelCreator;
         $this->thermometerFormAlias = $thermometerFormName;
-        $this->dateRange = $dateRange;
     }
 
     /**
@@ -52,17 +45,9 @@ class ThermometerFormHandler extends AbstractStatisticsFormHandler implements Fo
      */
     public function createForm()
     {
-        $formModel = (new StatisticsFormModel())
-            ->setEntity($this->entityManager
-                    ->getRepository($this->getEntityName())
-                    ->findFirstThermometer()
-            )
-            ->setDateFrom(new \DateTime(sprintf('-%d days', $this->dateRange)))
-            ->setDateTo(new \DateTime());
-
         $this->form = $this->formFactory->create(
             $this->thermometerFormAlias,
-            $formModel
+            $this->formModelCreator->getModel($this->getEntityName())
         );
 
         return $this;

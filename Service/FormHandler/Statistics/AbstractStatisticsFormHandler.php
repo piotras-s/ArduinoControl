@@ -3,7 +3,9 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Service\FormHandler;
+namespace KGzocha\ArduinoBundle\Service\FormHandler\Statistics;
+
+use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
 
 abstract class AbstractStatisticsFormHandler extends AbstractFormHandler
 {
