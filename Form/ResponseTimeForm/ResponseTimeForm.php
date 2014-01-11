@@ -3,11 +3,13 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Form;
+namespace KGzocha\ArduinoBundle\Form\ResponseTimeForm;
 
+
+use KGzocha\ArduinoBundle\Form\AbstractDateRangeForm;
 use Symfony\Component\Form\FormBuilderInterface;
 
-abstract class AbstractStatisticsForm extends AbstractDateRangeForm
+class ResponseTimeForm extends AbstractDateRangeForm
 {
     /**
      * @var string
@@ -22,16 +24,7 @@ abstract class AbstractStatisticsForm extends AbstractDateRangeForm
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $builder
-            ->add('entity',
-                'entity',
-                array(
-                    'required' => true,
-                    'label' => $options['label'],
-                    'class' => $options['class'],
-                    'property' => $options['property'],
-                )
-            );
+        $builder->add('entity', 'hidden');
     }
 
     /**
@@ -43,3 +36,4 @@ abstract class AbstractStatisticsForm extends AbstractDateRangeForm
     }
 
 }
+ 

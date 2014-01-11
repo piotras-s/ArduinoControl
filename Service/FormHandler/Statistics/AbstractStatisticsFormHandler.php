@@ -26,10 +26,14 @@ abstract class AbstractStatisticsFormHandler extends AbstractFormHandler
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getId()
     {
-        return $this->getForm()->getData()->getEntity()->getId();
+        if (is_object($entity = $this->getForm()->getData()->getEntity())) {
+            return $entity->getId();
+        }
+
+        return null;
     }
 }

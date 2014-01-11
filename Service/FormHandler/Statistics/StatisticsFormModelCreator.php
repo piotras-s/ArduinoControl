@@ -32,16 +32,21 @@ class StatisticsFormModelCreator
      *
      * @return StatisticsFormModel
      */
-    public function getModel($entityName)
+    public function getModel($entityName = null)
     {
-        return (new StatisticsFormModel())
-            ->setEntity(
+        $model = new StatisticsFormModel();
+
+        if ($entityName) {
+            $model->setEntity(
                 $this->entityManager
                     ->getRepository($entityName)
                     ->findFirst()
-            )
+            );
+        }
+
+        return $model
             ->setDateFrom(new \DateTime(sprintf('-%d days', $this->dateRange)))
-            ->setDateTo((new \DateTime())->setTime(23, 59, 59));
+            ->setDateTo((new \DateTime()));
     }
 
 }

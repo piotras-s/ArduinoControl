@@ -81,12 +81,12 @@ class ResponseLogRepository extends EntityRepository implements StatisticableRep
 
         if ($dateFrom) {
             $query->andWhere('rl.date >= :dateFrom');
-            $query->setParameter(':dateFrom', $dateFrom->format('Y-m-d H:i:s'));
+            $query->setParameter(':dateFrom', $dateFrom->format('Y-m-d 00:00:00'));
         }
 
         if ($dateTo) {
             $query->andWhere('rl.date <= :dateTo');
-            $query->setParameter(':dateTo', $dateTo->format('Y-m-d H:i:s'));
+            $query->setParameter(':dateTo', $dateTo->format('Y-m-d 23:59:59'));
         }
 
         return $query

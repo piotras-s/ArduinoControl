@@ -3,16 +3,20 @@ parameters:
     arduino.form.statistics.model_creator.class:  'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormModelCreator'
 
 #   Thermometer
-    arduino.form.thermometer_form.class:  'KGzocha\ArduinoBundle\Form\ThermometerForm\ThermometerForm'
-    arduino.form.thermometer_form.alias:  'thermometer_form'
-    arduino.form.handler.thermometer_form.class:      'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler'
+    arduino.form.thermometer_form.class:          'KGzocha\ArduinoBundle\Form\ThermometerForm\ThermometerForm'
+    arduino.form.thermometer_form.alias:          'thermometer_form'
+    arduino.form.handler.thermometer_form.class:  'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler'
 
 
 #   Pin status log
-    arduino.form.pin_status_form.class:   'KGzocha\ArduinoBundle\Form\PinsForm\PinsForm'
-    arduino.form.pin_status_form.alias:   'pins_form'
-    arduino.form.handler.pin_status_form.class:         'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsForm\PinsFormHandler'
+    arduino.form.pin_status_form.class:           'KGzocha\ArduinoBundle\Form\PinsForm\PinsForm'
+    arduino.form.pin_status_form.alias:           'pins_form'
+    arduino.form.handler.pin_status_form.class:   'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsForm\PinsFormHandler'
 
+#   Response log
+    arduino.form.response_form.class:             'KGzocha\ArduinoBundle\Form\ResponseTimeForm\ResponseTimeForm'
+    arduino.form.response_form.alias:             'response_time_form'
+    arduino.form.handler.response_form.class:     'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ResponseTimeForm\ResponseTimeFormHandler'
 
 #   Conenctor settings form
     arduino.settings_saver.class:                   'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver'
@@ -63,6 +67,18 @@ services:
         class:  %arduino.form.handler.pin_status_form.class%
         lazy:   true
         arguments: [@form.factory, @arduino.form.statistics.model_creator, %arduino.form.pin_status_form.alias%]
+
+    arduino.form.response_form:
+        class:  %arduino.form.response_form.class%
+        lazy:   true
+        arguments: [%arduino.form.response_form.alias%]
+        tags:
+            - { name: form.type, alias: %arduino.form.response_form.alias% }
+
+    arduino.form.handler.response_form:
+        class:  %arduino.form.handler.response_form.class%
+        lazy:   true
+        arguments:  [@form.factory, @arduino.form.statistics.model_creator, %arduino.form.response_form.alias%]
 
 #   Settings form
 

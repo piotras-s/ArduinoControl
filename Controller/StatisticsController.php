@@ -5,6 +5,8 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ResponseTimeForm\ResponseTimeFormHandler;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormHanlderInterface;
 use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,21 +20,10 @@ class StatisticsController extends Controller
      */
     public function thermometerStatsAction(Request $request)
     {
-        /** @var ThermometerFormHandler $formHandler */
-        $formHandler = $this->getThermometerFormHandler()->createForm();
-        $formHandler->handle($request);
-
-        $data = $this->getStatisticsParser()->getStatisticsFromHandler(
-            $formHandler
-        );
-
-        return $this->render('ArduinoBundle:Statistics:data.html.twig',
-            array(
-                'formHandler' => $formHandler,
-                'form' => $formHandler->getForm()->createView(),
-                'data' => $data,
-                'label' => 'Temperature',
-            )
+        return $this->actionDefault(
+            $request,
+            $this->getThermometerFormHandler(),
+            'Temperature'
         );
     }
 
@@ -41,8 +32,35 @@ class StatisticsController extends Controller
      */
     public function pinStatsAction(Request $request)
     {
-        /** @var ThermometerFormHandler $formHandler */
-        $formHandler = $this->getPinFormHandler()->createForm();
+        return $this->actionDefault(
+            $request,
+            $this->getPinFormHandler(),
+            'Voltage'
+        );
+    }
+
+    /**
+     * @Route("/stats/response-time", name="arduino_stats_time")
+     */
+    public function responseTimeStatsAction(Request $request)
+    {
+        return $this->actionDefault(
+            $request,
+            $this->getResponseFormHandler(),
+            'Response time in ms'
+        );
+    }
+
+    /**
+     * @param Request                        $request
+     * @param StatisticsFormHanlderInterface $formHandler
+     * @param                                $label
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function actionDefault(Request $request, StatisticsFormHanlderInterface $formHandler, $label)
+    {
+        $formHandler = $formHandler->createForm();
         $formHandler->handle($request);
 
         $data = $this->getStatisticsParser()->getStatisticsFromHandler(
@@ -54,20 +72,7 @@ class StatisticsController extends Controller
                 'formHandler' => $formHandler,
                 'form' => $formHandler->getForm()->createView(),
                 'data' => $data,
-                'label' => 'Voltage',
-            )
-        );
-    }
-
-    /**
-     * @Route("/stats/response-time", name="arduino_stats_time")
-     */
-    public function responseTimeStatsAction(Request $request)
-    {
-        return $this->render('ArduinoBundle:Statistics:data.html.twig',
-            array(
-                'data' => $this->getStatisticsParser()->getStatistics('ArduinoBundle:ResponseLog', 0),
-                'label' => 'Response time in ms',
+                'label' => $label,
             )
         );
     }
@@ -89,11 +94,19 @@ class StatisticsController extends Controller
     }
 
     /**
-     * @return \KGzocha\ArduinoBundle\Service\FormHandler\PinsForm\PinsFormHandler
+     * @return \KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsForm\PinsFormHandler
      */
     protected function getPinFormHandler()
     {
         return $this->get('arduino.form.handler.pin_status_form');
+    }
+
+    /**
+     * @return ResponseTimeFormHandler
+     */
+    protected function getResponseFormHandler()
+    {
+        return $this->get('arduino.form.handler.response_form');
     }
 
 }
