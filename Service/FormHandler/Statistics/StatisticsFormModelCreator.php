@@ -41,7 +41,7 @@ class StatisticsFormModelCreator
                     ->findFirst()
             )
             ->setDateFrom(new \DateTime(sprintf('-%d days', $this->dateRange)))
-            ->setDateTo(new \DateTime());
+            ->setDateTo((new \DateTime())->setTime(23, 59, 59));
     }
 
 }

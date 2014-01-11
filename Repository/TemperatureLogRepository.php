@@ -33,12 +33,12 @@ class TemperatureLogRepository extends EntityRepository implements Statisticable
 
         if ($dateFrom) {
             $query->andWhere('tl.date >= :dateFrom');
-            $query->setParameter(':dateFrom', $dateFrom);
+            $query->setParameter(':dateFrom', $dateFrom->format('Y-m-d H:i:s'));
         }
 
         if ($dateTo) {
             $query->andWhere('tl.date <= :dateTo');
-            $query->setParameter(':dateTo', $dateTo);
+            $query->setParameter(':dateTo', $dateTo->format('Y-m-d H:i:s'));
         }
 
         return $query
