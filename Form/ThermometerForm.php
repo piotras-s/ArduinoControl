@@ -3,7 +3,7 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Form\ThermometerForm;
+namespace KGzocha\ArduinoBundle\Form;
 
 use KGzocha\ArduinoBundle\Form\AbstractStatisticsForm;
 use Symfony\Component\Form\FormBuilderInterface;

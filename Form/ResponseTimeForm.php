@@ -3,7 +3,7 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Form\ResponseTimeForm;
+namespace KGzocha\ArduinoBundle\Form;
 
 
 use KGzocha\ArduinoBundle\Form\AbstractDateRangeForm;

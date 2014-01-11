@@ -3,20 +3,20 @@ parameters:
     arduino.form.statistics.model_creator.class:  'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormModelCreator'
 
 #   Thermometer
-    arduino.form.thermometer_form.class:          'KGzocha\ArduinoBundle\Form\ThermometerForm\ThermometerForm'
+    arduino.form.thermometer_form.class:          'KGzocha\ArduinoBundle\Form\ThermometerForm'
     arduino.form.thermometer_form.alias:          'thermometer_form'
-    arduino.form.handler.thermometer_form.class:  'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler'
+    arduino.form.handler.thermometer_form.class:  'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerFormHandler'
 
 
 #   Pin status log
-    arduino.form.pin_status_form.class:           'KGzocha\ArduinoBundle\Form\PinsForm\PinsForm'
+    arduino.form.pin_status_form.class:           'KGzocha\ArduinoBundle\Form\PinsForm'
     arduino.form.pin_status_form.alias:           'pins_form'
-    arduino.form.handler.pin_status_form.class:   'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsForm\PinsFormHandler'
+    arduino.form.handler.pin_status_form.class:   'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsFormHandler'
 
 #   Response log
-    arduino.form.response_form.class:             'KGzocha\ArduinoBundle\Form\ResponseTimeForm\ResponseTimeForm'
+    arduino.form.response_form.class:             'KGzocha\ArduinoBundle\Form\ResponseTimeForm'
     arduino.form.response_form.alias:             'response_time_form'
-    arduino.form.handler.response_form.class:     'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ResponseTimeForm\ResponseTimeFormHandler'
+    arduino.form.handler.response_form.class:     'KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ResponseTimeFormHandler'
 
 #   Conenctor settings form
     arduino.settings_saver.class:                   'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver'
