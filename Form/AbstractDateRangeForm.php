@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Form;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -36,4 +35,3 @@ abstract class AbstractDateRangeForm extends AbstractType
     }
 
 }
- 

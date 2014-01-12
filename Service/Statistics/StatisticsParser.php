@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\Statistics;
 
-use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormHanlderInterface;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormHandlerInterface;
 use KGzocha\ArduinoBundle\Service\Statistics\Model\Variable2D;
 use KGzocha\ArduinoBundle\Service\Statistics\Parsers\StatisticParserInterface;
 
@@ -27,11 +27,11 @@ class StatisticsParser
     }
 
     /**
-     * @param StatisticsFormHanlderInterface $handler
+     * @param StatisticsFormHandlerInterface $handler
      *
      * @return array
      */
-    public function getStatisticsFromHandler(StatisticsFormHanlderInterface $handler)
+    public function getStatisticsFromHandler(StatisticsFormHandlerInterface $handler)
     {
         return $this->getStatistics(
             $handler->getStatisticsEntityName(),

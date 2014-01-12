@@ -5,9 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
-use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ResponseTimeForm\ResponseTimeFormHandler;
-use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormHanlderInterface;
-use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\ThermometerForm\ThermometerFormHandler;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +20,7 @@ class StatisticsController extends Controller
     {
         return $this->actionDefault(
             $request,
-            $this->getThermometerFormHandler(),
-            'Temperature'
+            $this->getThermometerForm()
         );
     }
 
@@ -34,8 +31,7 @@ class StatisticsController extends Controller
     {
         return $this->actionDefault(
             $request,
-            $this->getPinFormHandler(),
-            'Voltage'
+            $this->getPinForm()
         );
     }
 
@@ -46,21 +42,13 @@ class StatisticsController extends Controller
     {
         return $this->actionDefault(
             $request,
-            $this->getResponseFormHandler(),
-            'Response time in ms'
+            $this->getResponseForm()
         );
     }
 
-    /**
-     * @param Request                        $request
-     * @param StatisticsFormHanlderInterface $formHandler
-     * @param                                $label
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function actionDefault(Request $request, StatisticsFormHanlderInterface $formHandler, $label)
+    protected function actionDefault(Request $request, StatisticsFormInterface $form)
     {
-        $formHandler = $formHandler->createForm();
+        $formHandler = $this->get('arduino.form.handler.statistics')->setFormClass($form)->createForm();
         $formHandler->handle($request);
 
         $data = $this->getStatisticsParser()->getStatisticsFromHandler(
@@ -72,7 +60,7 @@ class StatisticsController extends Controller
                 'formHandler' => $formHandler,
                 'form' => $formHandler->getForm()->createView(),
                 'data' => $data,
-                'label' => $label,
+                'label' => $form->getFormLabel(),
             )
         );
     }
@@ -86,27 +74,27 @@ class StatisticsController extends Controller
     }
 
     /**
-     * @return ThermometerFormHandler
+     * @return StatisticsFormInterface
      */
-    protected function getThermometerFormHandler()
+    protected function getThermometerForm()
     {
-        return $this->get('arduino.form.handler.thermometer_form');
+        return $this->get('arduino.form.thermometer_form');
     }
 
     /**
-     * @return \KGzocha\ArduinoBundle\Service\FormHandler\Statistics\PinsForm\PinsFormHandler
+     * @return StatisticsFormInterface
      */
-    protected function getPinFormHandler()
+    protected function getPinForm()
     {
-        return $this->get('arduino.form.handler.pin_status_form');
+        return $this->get('arduino.form.pin_status_form');
     }
 
     /**
-     * @return ResponseTimeFormHandler
+     * @return StatisticsFormInterface
      */
-    protected function getResponseFormHandler()
+    protected function getResponseForm()
     {
-        return $this->get('arduino.form.handler.response_form');
+        return $this->get('arduino.form.response_form');
     }
 
 }

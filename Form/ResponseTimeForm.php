@@ -5,11 +5,11 @@
 
 namespace KGzocha\ArduinoBundle\Form;
 
-
 use KGzocha\ArduinoBundle\Form\AbstractDateRangeForm;
+use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ResponseTimeForm extends AbstractDateRangeForm
+class ResponseTimeForm extends AbstractDateRangeForm implements StatisticsFormInterface
 {
     /**
      * @var string
@@ -35,5 +35,29 @@ class ResponseTimeForm extends AbstractDateRangeForm
         return $this->name;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getFormEntityName()
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatisticsEntityName()
+    {
+        return 'ArduinoBundle:ResponseLog';
+    }
+
+    /**
+     * Returns form label which can be printed
+     * @return string
+     */
+    public function getFormLabel()
+    {
+        return 'Response time in ms';
+    }
+
 }
- 

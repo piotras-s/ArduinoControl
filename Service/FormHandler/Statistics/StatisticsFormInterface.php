@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\FormHandler\Statistics;
 
-interface StatisticsFormHanlderInterface
+interface StatisticsFormInterface
 {
 
     /**
@@ -23,20 +23,9 @@ interface StatisticsFormHanlderInterface
     public function getFormEntityName();
 
     /**
-     * Will return form entity ID number from user
-     * @return int
+     * Returns form label which can be printed
+     * @return string
      */
-    public function getId();
+    public function getFormLabel();
 
-    /**
-     * Will return picked by user date time from which statistics will start
-     * @return \DateTime
-     */
-    public function getDateFrom();
-
-    /**
-     * Will return picked by user date time till which statistics will end
-     * @return \DateTime
-     */
-    public function getDateTo();
 }

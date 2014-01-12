@@ -5,9 +5,8 @@
 
 namespace KGzocha\ArduinoBundle\Service\FormHandler\Statistics;
 
-
 use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Form\StatisticsFormModel;
+use KGzocha\ArduinoBundle\Model\StatisticsFormModel;
 
 class StatisticsFormModelCreator
 {
@@ -50,4 +49,3 @@ class StatisticsFormModelCreator
     }
 
 }
- 

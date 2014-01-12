@@ -9,8 +9,7 @@ use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
 use Symfony\Component\Form\FormFactory;
 
-abstract class AbstractStatisticsFormHandler extends AbstractFormHandler implements FormHandlerInterface,
-    StatisticsFormHanlderInterface
+class StatisticsFormHandler extends AbstractFormHandler implements FormHandlerInterface, StatisticsFormHandlerInterface
 {
 
     /**
@@ -19,9 +18,9 @@ abstract class AbstractStatisticsFormHandler extends AbstractFormHandler impleme
     protected $formFactory;
 
     /**
-     * @var string
+     * @var StatisticsFormInterface
      */
-    protected $formAlias;
+    protected $formClass;
 
     /**
      * @var StatisticsFormModelCreator
@@ -30,11 +29,9 @@ abstract class AbstractStatisticsFormHandler extends AbstractFormHandler impleme
 
     public function __construct(
         FormFactory $formFactory,
-        StatisticsFormModelCreator $formModelCreator,
-        $formAlias)
+        StatisticsFormModelCreator $formModelCreator)
     {
         $this->formFactory = $formFactory;
-        $this->formAlias = $formAlias;
         $this->formModelCreator = $formModelCreator;
     }
 
@@ -44,8 +41,8 @@ abstract class AbstractStatisticsFormHandler extends AbstractFormHandler impleme
     public function createForm()
     {
         $this->form = $this->formFactory->create(
-            $this->formAlias,
-            $this->formModelCreator->getModel($this->getFormEntityName())
+            $this->getFormClass(),
+            $this->formModelCreator->getModel($this->getFormClass()->getFormEntityName())
         );
 
         return $this;
@@ -78,4 +75,41 @@ abstract class AbstractStatisticsFormHandler extends AbstractFormHandler impleme
 
         return null;
     }
+
+    /**
+     * @return null|string
+     */
+    public function getFormEntityName()
+    {
+        return $this->getFormClass()->getFormEntityName();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getStatisticsEntityName()
+    {
+        return $this->getFormClass()->getStatisticsEntityName();
+    }
+
+    /**
+     * @param StatisticsFormInterface $formClass
+     *
+     * @return $this
+     */
+    public function setFormClass(StatisticsFormInterface $formClass)
+    {
+        $this->formClass = $formClass;
+
+        return $this;
+    }
+
+    /**
+     * @return StatisticsFormInterface
+     */
+    public function getFormClass()
+    {
+        return $this->formClass;
+    }
+
 }

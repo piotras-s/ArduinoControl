@@ -3,7 +3,7 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Form;
+namespace KGzocha\ArduinoBundle\Model;
 
 class StatisticsFormModel
 {
