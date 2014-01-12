@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorWrapperInterface;
 use KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface;
 
 /**
@@ -27,30 +28,39 @@ class ConnectorFactory
      */
     protected $responseHandler;
 
-    public function __construct(ConnectorSettingsInterface $settingsFromDatabase, ResponseHandlerInterface $responseHandler)
+    /**
+     * @var Settings\ConnectorWrapperInterface
+     */
+    protected $wrapper;
+
+    public function __construct(ConnectorSettingsInterface $settingsFromDatabase,
+        ResponseHandlerInterface $responseHandler,
+        ConnectorWrapperInterface $wrapper)
     {
         $this->settingsFromDatabase = $settingsFromDatabase;
         $this->responseHandler = $responseHandler;
+        $this->wrapper = $wrapper;
     }
 
     /**
      * Returns connector
-     * @param ConnectorSettingsInterface $settings
      *
-     * @return ArduinoConnectorWrapper
+*@param ConnectorSettingsInterface $settings
+     *
+     * @return ConnectorWrapper
      */
     public function getConnector(ConnectorSettingsInterface $settings)
     {
         $class = $settings->getConnectorClass();
 
-        return new ArduinoConnectorWrapper(
+        return $this->wrapper->setConnector(
             new $class($settings, $this->responseHandler)
         );
     }
 
     /**
      * Returns connector with default setting read from date
-     * @return ArduinoConnectorWrapper
+     * @return ConnectorWrapper
      */
     public function getConnectorFromDatabase()
     {

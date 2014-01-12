@@ -7,7 +7,7 @@ namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
 
-abstract class AbstractArduinoConnector implements ConnectorInterface
+abstract class AbstractConnector implements ConnectorInterface
 {
 
     /**

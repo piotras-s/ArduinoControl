@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector;
 
-class ArduinoConnectorException extends \RuntimeException
+class ConnectorException extends \RuntimeException
 {
 
 }

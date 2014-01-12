@@ -2,7 +2,7 @@
 
 namespace KGzocha\ArduinoBundle\Controller;
 
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorException;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorException;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ class DefaultController extends Controller
         $address = '';
         try {
             $address = $connector->sendRequest();
-        } catch (ArduinoConnectorException $exception) {
+        } catch (ConnectorException $exception) {
             $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
         }
 

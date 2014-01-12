@@ -9,7 +9,7 @@ use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebConnectorSettings
 use KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\ProcessorException;
 use KGzocha\ArduinoBundle\Service\ResponseHandler\ResponseHandlerInterface;
 
-class WebConnector extends AbstractArduinoConnector
+class WebConnector extends AbstractConnector
 {
 
     /**
@@ -37,7 +37,7 @@ class WebConnector extends AbstractArduinoConnector
      * @param array $variables
      *
      * @return mixed
-     * @throws ArduinoConnectorException
+     * @throws ConnectorException
      */
     public function sendRequest(array $variables = array())
     {
@@ -56,7 +56,7 @@ class WebConnector extends AbstractArduinoConnector
             return $this->finalAdress;
         }
 
-        throw new ArduinoConnectorException('Connector is not enabled');
+        throw new ConnectorException('Connector is not enabled');
     }
 
     public function __destruct()
@@ -145,14 +145,14 @@ class WebConnector extends AbstractArduinoConnector
      * @param string $query
      * @param int    $time
      *
-     * @throws ArduinoConnectorException
+     * @throws ConnectorException
      */
     protected function processResponse(&$response, $query = null, $time = null)
     {
         try {
             $this->responseHandler->handle($response, $query, $time);
         } catch (ProcessorException $exception) {
-            throw new ArduinoConnectorException($exception->getMessage(), $exception->getCode(), $exception);
+            throw new ConnectorException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 

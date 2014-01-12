@@ -2,11 +2,17 @@ parameters:
     arduino.connector.settings_prefix:                'connector.'
     arduino.connector.factory.class:                  'KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorFactory'
     arduino.connector.settings.web_from_db.class:     'KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebConnectorSettingsFromDatabase'
+    arduino.connector.wrapper.class:                  'KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorWrapper'
 
 services:
+    arduino.connector.wrapper:
+        class:      %arduino.connector.wrapper.class%
+        lazy:       true
+        arguments:  [@event_dispatcher]
+
     arduino.connector.factory:
         class:      %arduino.connector.factory.class%
-        arguments:  [@arduino.connector.settings.web_from_db, @arduino.response.response_handler]
+        arguments:  [@arduino.connector.settings.web_from_db, @arduino.response.response_handler, @arduino.connector.wrapper]
         lazy:       true
 
     arduino.connector.settings.web_from_db:

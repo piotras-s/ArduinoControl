@@ -6,7 +6,7 @@
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings;
 
 use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\ArduinoConnectorException;
+use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorException;
 
 class WebConnectorSettingsFromDatabase extends WebConnectorSettings
 {
@@ -51,7 +51,7 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
     /**
      * @param $key
      *
-     * @throws ArduinoConnectorException
+     * @throws ConnectorException
      * @return mixed
      */
     protected function getSingleSetting($key)
@@ -64,7 +64,7 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
             }
         }
 
-        throw new ArduinoConnectorException(sprintf('Missing %s connector parameter', $key));
+        throw new ConnectorException(sprintf('Missing %s connector parameter', $key));
     }
 
     /**
@@ -76,7 +76,7 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
             $setter = sprintf('%s%s', 'set', ucfirst($field));
             try {
                 $this->$setter($this->getSingleSetting($field));
-            } catch (ArduinoConnectorException $exception) {
+            } catch (ConnectorException $exception) {
 
             }
         }
