@@ -45,9 +45,9 @@ class ConnectorFactory
     /**
      * Returns connector
      *
-*@param ConnectorSettingsInterface $settings
+     * @param ConnectorSettingsInterface $settings
      *
-     * @return ConnectorWrapper
+     * @return ConnectorInterface
      */
     public function getConnector(ConnectorSettingsInterface $settings)
     {
@@ -60,7 +60,7 @@ class ConnectorFactory
 
     /**
      * Returns connector with default setting read from date
-     * @return ConnectorWrapper
+     * @return ConnectorInterface
      */
     public function getConnectorFromDatabase()
     {

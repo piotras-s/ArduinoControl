@@ -70,9 +70,17 @@ class ConnectorWrapper implements ConnectorInterface, ConnectorWrapperInterface
      */
     public function sendRequest(array $variables = array())
     {
-        $this->eventDispatcher->dispatch(ConnectorEvents::CONNECTOR_PRE_SEND_REQUEST, $this->getRequestEvent($variables));
+        $this->eventDispatcher->dispatch(
+            ConnectorEvents::CONNECTOR_PRE_SEND_REQUEST,
+            $this->getRequestEvent($variables)
+        );
+
         $result = $this->arduinoConnector->sendRequest($variables);
-        $this->eventDispatcher->dispatch(ConnectorEvents::CONNECTOR_POST_SEND_REQUEST, $this->getRequestEvent($variables));
+
+        $this->eventDispatcher->dispatch(
+            ConnectorEvents::CONNECTOR_POST_SEND_REQUEST,
+            $this->getRequestEvent($variables)
+        );
 
         return $result;
     }
