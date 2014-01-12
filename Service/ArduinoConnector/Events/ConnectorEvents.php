@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Events;
 
-
 final class ConnectorEvents
 {
     const CONNECTOR_SET = 'arduino.connector.set';
@@ -19,4 +18,3 @@ final class ConnectorEvents
     const CONNECTOR_PRE_SEND_REQUEST = 'arduino.connector.pre_send_request';
     const CONNECTOR_POST_SEND_REQUEST = 'arduino.connector.post_send_request';
 }
- 

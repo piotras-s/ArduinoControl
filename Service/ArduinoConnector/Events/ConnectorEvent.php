@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Events;
 
-
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -29,4 +28,3 @@ class ConnectorEvent extends Event
         return $this->connector;
     }
 }
- 

@@ -5,7 +5,6 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Events;
 
-
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorInterface;
 
 class ConnectorSendRequestEvent extends ConnectorEvent
@@ -31,4 +30,3 @@ class ConnectorSendRequestEvent extends ConnectorEvent
     }
 
 }
- 
