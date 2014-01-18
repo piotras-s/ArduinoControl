@@ -22,7 +22,7 @@ class ConnectorClassSettings extends AbstractType
 
         $builder->add('class', 'choice', array(
                 'choices' => $this->choiceList,
-                'label' => 'Pick class to use as connector'
+                'label' => 'Pick class to use as connector',
             ));
     }
 

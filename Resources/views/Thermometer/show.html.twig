@@ -1,0 +1,16 @@
+{% extends 'ArduinoBundle::index.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10">
+            <h1>Thermometer show</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        {% include 'ArduinoBundle:Thermometer:singleThermometerOnList.html.twig' %}
+    </div>
+
+{% endblock %}

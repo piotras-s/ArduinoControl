@@ -7,3 +7,6 @@ arduino_statistics:
 
 arduino_settings:
     resource: "@ArduinoBundle/Controller/SettingsController.php"
+
+arduino_settings:
+    resource: "@ArduinoBundle/Controller/ThermometerController.php"

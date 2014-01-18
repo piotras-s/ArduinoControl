@@ -31,7 +31,7 @@ class TemperatureLog
     /**
      * @var Thermometer
      *
-     * @ORM\ManyToOne(targetEntity="Thermometer")
+     * @ORM\ManyToOne(targetEntity="Thermometer", inversedBy="temperatureLog")
      */
     private $thermometer;
 

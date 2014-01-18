@@ -1,0 +1,8 @@
+<div class="col-lg-3 well" style="margin: 5px;">
+    <p>Name: <strong>{{ thermometer.name }}</strong></p>
+    <p>System ID: {{ thermometer.systemId }}</p>
+    <p><a href="{{ path('arduino_thermometer_update', {'systemId': thermometer.systemId}) }}">Edit</a></p>
+    <p>
+        <a href="{{ path('arduino_thermometer_delete', {'systemId': thermometer.systemId}) }}">Delete</a>
+    </p>
+</div>

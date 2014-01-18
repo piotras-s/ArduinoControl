@@ -3,12 +3,15 @@
 namespace KGzocha\ArduinoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Thermometer
  *
  * @ORM\Table(name="thermometer")
  * @ORM\Entity(repositoryClass="KGzocha\ArduinoBundle\Repository\ThermometerRepository")
+ * @UniqueEntity("systemId")
  */
 class Thermometer
 {
@@ -31,9 +34,17 @@ class Thermometer
     /**
      * @var integer
      *
-     * @ORM\Column(name="systemId", type="integer")
+     * @ORM\Column(name="systemId", type="integer", unique=true)
+     * @Assert\Range(min=1, max=128)
      */
     private $systemId;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TemperatureLog", mappedBy="thermometer", fetch="EXTRA_LAZY", cascade={"remove"})
+     */
+    private $temperatureLog;
 
     /**
      * Get id
