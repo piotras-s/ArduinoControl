@@ -44,14 +44,21 @@ class SettingsSaver implements SettingsSaverInterface
     }
 
     /**
-     * @param string    $name
-     * @param \stdClass $object
-     * @param array     $fields
+     * @param  string                 $name
+     * @param  \stdClass              $object
+     * @param  array                  $fields
+     * @throws SettingsSaverException
      */
     public function saveSettingsFromClass($name, $object, array $fields)
     {
         foreach ($fields as $field) {
             $getterMethod = sprintf('%s%s', 'get', ucfirst($field));
+            if (!method_exists($object, $getterMethod)) {
+                throw new SettingsSaverException(
+                    sprintf("Given object (%s) does not have method %s.", get_class($object), $getterMethod)
+                );
+            }
+
             $this->saveSetting(
                 $this->prefixField($name, $field),
                 $object->$getterMethod()

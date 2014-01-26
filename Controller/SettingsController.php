@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Controller;
 
 use KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsException;
+use KGzocha\ArduinoBundle\Service\Settings\SettingsManagerException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,15 +25,18 @@ class SettingsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('arduino.settings_manager')
-                ->clearNavigation()
-                ->takeConnector()
-                ->takeClass()
-                ->saveSetting($form->getData()->getClass());
+            try {
+                $this->get('arduino.settings_manager')
+                    ->clearNavigation()
+                    ->takeConnector()
+                    ->takeClass()
+                    ->saveSetting($form->getData()->getClass());
 
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->successFlash();
+                $this->getDoctrine()->getManager()->flush();
+                $this->successFlash();
+            } catch (SettingsManagerException $exception) {
+                return $this->showException($exception);
+            }
         }
 
         return array(
@@ -53,11 +57,9 @@ class SettingsController extends Controller
             }
             $this->getDoctrine()->getManager()->flush();
         } catch (SettingsException $exception) {
-            $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
-
-            return $this->redirect(
-                $this->generateUrl('arduino_settings_connector_class')
-            );
+            return $this->showException($exception, 'arduino_settings_connector_class');
+        } catch (SettingsManagerException $exception) {
+            return $this->showException($exception, 'arduino_settings_connector_class');
         }
 
         return array(
@@ -71,6 +73,24 @@ class SettingsController extends Controller
     public function successFlash()
     {
         $this->get('session')->getFlashBag()->add('success', 'Settings were successfuly saved');
+    }
+
+    /**
+     * @param \Exception $exception
+     * @param string     $redirect
+     *
+     * @return RedirectResponse
+     */
+    protected function showException(\Exception $exception, $redirect = null)
+    {
+        $this->get('logger')->error($exception->getMessage());
+        $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
+
+        if ($redirect) {
+            return $this->redirect(
+                $this->generateUrl($redirect)
+            );
+        }
     }
 
 }

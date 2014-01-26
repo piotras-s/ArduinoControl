@@ -60,10 +60,15 @@ class SettingsManager implements SettingsManagerInterface
      * @param array $fields
      *
      * @return mixed
+     * @throws SettingsManagerException
      */
     public function saveSettingsFromClass($class, array $fields)
     {
-        return $this->settingsSaver->saveSettingsFromClass($this->getName(), $class, $fields);
+        try {
+            return $this->settingsSaver->saveSettingsFromClass($this->getName(), $class, $fields);
+        } catch (SettingsSaverException $exception) {
+            throw new SettingsManagerException($exception->getMessage(), $exception);
+        }
     }
 
     /**
@@ -88,10 +93,15 @@ class SettingsManager implements SettingsManagerInterface
      * @param array $fields
      *
      * @return mixed
+     * @throws SettingsManagerException
      */
     public function giveAllSettingsToClass($object, array $fields)
     {
-        return $this->settingsGiver->giveAllSettingsToClass($this->getName(), $object, $fields);
+        try {
+            return $this->settingsGiver->giveAllSettingsToClass($this->getName(), $object, $fields);
+        } catch (SettingsGiverException $exception) {
+            throw new SettingsManagerException($exception->getMessage(), $exception);
+        }
     }
 
     /**
@@ -99,15 +109,20 @@ class SettingsManager implements SettingsManagerInterface
      * @param $arguments
      *
      * @return $this
+     * @throws SettingsManagerException
      */
     public function __call($name, $arguments)
     {
         $matches = array();
         if (preg_match($this->format, $name, $matches)) {
             $this->searchedName[] = lcfirst($matches[1]);
+
+            return $this;
         }
 
-        return $this;
+        throw new SettingsManagerException(
+            sprintf('Wrong naviagtion method format. Method: %s Format: %s', $name, $this->format)
+        );
     }
 
     /**

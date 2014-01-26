@@ -10,28 +10,16 @@ use KGzocha\ArduinoBundle\Service\Settings\SettingsManagerInterface;
 class WebConnectorSettingsFromDatabase extends WebConnectorSettings
 {
     /**
-     * @var SettingsManagerInterface
+     * @param SettingsManagerInterface $settingsManager
      */
-    protected $settingsManager;
-
     public function __construct(SettingsManagerInterface $settingsManager)
     {
-        $this->settingsManager = $settingsManager;
-        $this->getSettings();
-    }
-
-    /**
-     * @return WebConnectorSettingsFromDatabase
-     */
-    protected function getSettings()
-    {
-        $this
-            ->settingsManager
+        $settingsManager
             ->clearNavigation()
             ->takeConnector()
-            ->giveAllSettingsToClass($this, $this->getFieldsToSave());
-
-        return $this;
+            ->giveAllSettingsToClass(
+                $this,
+                $this->getFieldsToSave()
+            );
     }
-
 }

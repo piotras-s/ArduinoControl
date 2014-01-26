@@ -7,6 +7,7 @@ namespace KGzocha\ArduinoBundle\Service\Settings;
 
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Settings;
+use KGzocha\ArduinoBundle\Service\Settings\SettingsGiverException;
 
 class SettingsGiver implements SettingsGiverInterface
 {
@@ -61,9 +62,10 @@ class SettingsGiver implements SettingsGiverInterface
     }
 
     /**
-     * @param       $name
-     * @param       $object
-     * @param array $fields
+     * @param                         $name
+     * @param                         $object
+     * @param  array                  $fields
+     * @throws SettingsGiverException
      */
     public function giveAllSettingsToClass($name, $object, array $fields)
     {
@@ -71,6 +73,12 @@ class SettingsGiver implements SettingsGiverInterface
 
         foreach ($fields as $field) {
             $setter = $this->getSetterName($field);
+            if (!method_exists($object, $setter)) {
+                throw new SettingsGiverException(
+                    sprintf("Given object (%s) does not have method %s.", get_class($object), $setter)
+                );
+            }
+
             $object->$setter(
                 $this->findValueByName(
                     $this->prefixField($name, $field),

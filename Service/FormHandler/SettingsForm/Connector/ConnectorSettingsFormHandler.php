@@ -31,6 +31,10 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
      */
     protected $connectorSettingsClasses;
 
+    /**
+     * @param FormFactory              $formFactory
+     * @param SettingsManagerInterface $settingsManager
+     */
     public function __construct(FormFactory $formFactory,
         SettingsManagerInterface $settingsManager)
     {
@@ -60,7 +64,9 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
         }
 
         if (!class_exists($connectorClassName)) {
-            throw new SettingsException(sprintf('Connector class "%s" does not exists in the system', $connectorClassName));
+            throw new SettingsException(
+                sprintf('Connector class "%s" does not exists in the system', $connectorClassName)
+            );
         }
 
         $this->form = $this->formFactory->create(
