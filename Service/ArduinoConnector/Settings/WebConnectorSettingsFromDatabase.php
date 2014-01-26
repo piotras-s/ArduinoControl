@@ -14,14 +14,8 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
      */
     protected $settingsManager;
 
-    /**
-     * @var string
-     */
-    protected $settingsPrefix;
-
-    public function __construct(SettingsManagerInterface $settingsManager, $settingsPrefix)
+    public function __construct(SettingsManagerInterface $settingsManager)
     {
-        $this->settingsPrefix = $settingsPrefix;
         $this->settingsManager = $settingsManager;
         $this->getSettings();
     }

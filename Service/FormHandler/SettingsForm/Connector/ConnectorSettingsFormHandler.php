@@ -32,8 +32,7 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
     protected $connectorSettingsClasses;
 
     public function __construct(FormFactory $formFactory,
-        SettingsManagerInterface $settingsManager,
-        $settingsPrefix)
+        SettingsManagerInterface $settingsManager)
     {
         $this->formFactory = $formFactory;
         $this->settingsManager = $settingsManager;

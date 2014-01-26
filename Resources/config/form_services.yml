@@ -89,6 +89,6 @@ services:
     arduino.form.handler.settings.connector:
         class:  %arduino.form.handler.settings.connector.class%
         lazy:   true
-        arguments: [@form.factory, @arduino.settings_manager, %arduino.form.handler.settings.connector.prefix%]
+        arguments: [@form.factory, @arduino.settings_manager]
         calls:
             - [addConenctorSettingsClass, [@arduino.connector.settings.web_from_db]]

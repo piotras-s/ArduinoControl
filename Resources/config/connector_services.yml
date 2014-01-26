@@ -17,5 +17,5 @@ services:
 
     arduino.connector.settings.web_from_db:
         class:      %arduino.connector.settings.web_from_db.class%
-        arguments:  [@arduino.settings_manager, %arduino.connector.settings_prefix%]
+        arguments:  [@arduino.settings_manager]
         lazy:       true
