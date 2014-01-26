@@ -9,7 +9,7 @@ parameters:
 services:
     arduino.settings_manager:
         class:      %arduino.settings_manager.class%
-        arguments:  [@arduino.settings_saver, @arduino.settings_giver]
+        arguments:  [@event_dispatcher, @arduino.settings_saver, @arduino.settings_giver]
         lazy:       true
         calls:
             - [setFormat, [%arduino.settings_manager.format%]]

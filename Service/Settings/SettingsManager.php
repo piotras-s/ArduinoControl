@@ -5,8 +5,20 @@
 
 namespace KGzocha\ArduinoBundle\Service\Settings;
 
+use KGzocha\ArduinoBundle\Service\Settings\Events\PostSetClassSettingsEvent;
+use KGzocha\ArduinoBundle\Service\Settings\Events\PostSetSingleSettingEvent;
+use KGzocha\ArduinoBundle\Service\Settings\Events\PreSetClassSettingsEvent;
+use KGzocha\ArduinoBundle\Service\Settings\Events\PreSetSingleSettingEvent;
+use KGzocha\ArduinoBundle\Service\Settings\Events\SettingsManagerEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
 class SettingsManager implements SettingsManagerInterface
 {
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
     /**
      * @var SettingsSaverInterface
      */
@@ -33,16 +45,19 @@ class SettingsManager implements SettingsManagerInterface
     protected $glue;
 
     /**
-     * @param SettingsSaverInterface $settingsSaver
-     * @param SettingsGiverInterface $settingsGiver
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param SettingsSaverInterface   $settingsSaver
+     * @param SettingsGiverInterface   $settingsGiver
      */
     public function __construct(
+        EventDispatcherInterface $eventDispatcher,
         SettingsSaverInterface $settingsSaver,
         SettingsGiverInterface $settingsGiver)
     {
         $this->searchedName = array();
         $this->settingsSaver = $settingsSaver;
         $this->settingsGiver = $settingsGiver;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -52,7 +67,19 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function saveSetting($value)
     {
-        return $this->settingsSaver->saveSetting($this->getName(), $value);
+        $this->eventDispatcher->dispatch(
+            SettingsManagerEvents::PRE_SET_SINGLE_SETTING,
+            new PreSetSingleSettingEvent($this->getName(), $value)
+        );
+
+        $return = $this->settingsSaver->saveSetting($this->getName(), $value);
+
+        $this->eventDispatcher->dispatch(
+            SettingsManagerEvents::POST_SET_SINGLE_SETTING,
+            new PostSetSingleSettingEvent($this->getName(), $value)
+        );
+
+        return $return;
     }
 
     /**
@@ -64,8 +91,19 @@ class SettingsManager implements SettingsManagerInterface
      */
     public function saveSettingsFromClass($class, array $fields)
     {
+        $this->eventDispatcher->dispatch(
+            SettingsManagerEvents::PRE_SET_CLASS_SETTINGS,
+            new PreSetClassSettingsEvent($this->getName(), $class, $fields)
+        );
+
         try {
-            return $this->settingsSaver->saveSettingsFromClass($this->getName(), $class, $fields);
+            $return = $this->settingsSaver->saveSettingsFromClass($this->getName(), $class, $fields);
+            $this->eventDispatcher->dispatch(
+                SettingsManagerEvents::POST_SET_CLASS_SETTINGS,
+                new PostSetClassSettingsEvent($this->getName(), $class, $fields)
+            );
+
+            return $return;
         } catch (SettingsSaverException $exception) {
             throw new SettingsManagerException($exception->getMessage(), $exception);
         }
