@@ -1,5 +1,5 @@
 parameters:
-    arduino.connector.settings_prefix:                'connector.'
+    arduino.connector.settings_prefix:                'connector'
     arduino.connector.factory.class:                  'KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorFactory'
     arduino.connector.settings.web_from_db.class:     'KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\WebConnectorSettingsFromDatabase'
     arduino.connector.wrapper.class:                  'KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorWrapper'
@@ -17,5 +17,5 @@ services:
 
     arduino.connector.settings.web_from_db:
         class:      %arduino.connector.settings.web_from_db.class%
-        arguments:  [@doctrine.orm.entity_manager, %arduino.connector.settings_prefix%]
+        arguments:  [@arduino.settings_manager, %arduino.connector.settings_prefix%]
         lazy:       true

@@ -5,31 +5,24 @@
 
 namespace KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings;
 
-use Doctrine\ORM\EntityManager;
-use KGzocha\ArduinoBundle\Service\ArduinoConnector\ConnectorException;
+use KGzocha\ArduinoBundle\Service\Settings\SettingsManagerInterface;
 
 class WebConnectorSettingsFromDatabase extends WebConnectorSettings
 {
-
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var SettingsManagerInterface
      */
-    protected $em;
+    protected $settingsManager;
 
     /**
      * @var string
      */
     protected $settingsPrefix;
 
-    /**
-     * @var array
-     */
-    protected $configuration;
-
-    public function __construct(EntityManager $em, $settingsPrefix)
+    public function __construct(SettingsManagerInterface $settingsManager, $settingsPrefix)
     {
-        $this->em = $em;
         $this->settingsPrefix = $settingsPrefix;
+        $this->settingsManager = $settingsManager;
         $this->getSettings();
     }
 
@@ -38,48 +31,13 @@ class WebConnectorSettingsFromDatabase extends WebConnectorSettings
      */
     protected function getSettings()
     {
-        $this->configuration = $this
-            ->em
-            ->getRepository('KGzocha\ArduinoBundle\Entity\Settings')
-            ->findAllByPrefix($this->settingsPrefix);
-
-        $this->setFieldsValue($this->getFieldsToSave());
+        $this
+            ->settingsManager
+            ->clearNavigation()
+            ->takeConnector()
+            ->giveAllSettingsToClass($this, $this->getFieldsToSave());
 
         return $this;
-    }
-
-    /**
-     * @param $key
-     *
-     * @throws ConnectorException
-     * @return mixed
-     */
-    protected function getSingleSetting($key)
-    {
-        $key = $this->settingsPrefix . $key;
-        /** @var KGzocha\ArduinoBundle\Entity\Settings $setting */
-        foreach ($this->configuration as $setting) {
-            if ($key == $setting->getName()) {
-                return $setting->getValue();
-            }
-        }
-
-        throw new ConnectorException(sprintf('Missing %s connector parameter', $key));
-    }
-
-    /**
-     * @param array $fields
-     */
-    protected function setFieldsValue(array $fields)
-    {
-        foreach ($fields as $field) {
-            $setter = sprintf('%s%s', 'set', ucfirst($field));
-            try {
-                $this->$setter($this->getSingleSetting($field));
-            } catch (ConnectorException $exception) {
-
-            }
-        }
     }
 
 }

@@ -14,8 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class SettingsController extends Controller
 {
 
-    const CONNECTOR_SETTINGS_PREFIX = 'connector.';
-
     /**
      * @Route("/settings/connector/class", name="arduino_settings_connector_class")
      * @Template()
@@ -26,12 +24,12 @@ class SettingsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('arduino.settings_saver')
-                ->setPrefix(self::CONNECTOR_SETTINGS_PREFIX)
-                ->saveSetting(
-                    'class',
-                    $form->getData()->getClass()
-                );
+            $this->get('arduino.settings_manager')
+                ->clearNavigation()
+                ->takeConnector()
+                ->takeClass()
+                ->saveSetting($form->getData()->getClass());
+
             $this->getDoctrine()->getManager()->flush();
 
             $this->successFlash();
@@ -53,6 +51,7 @@ class SettingsController extends Controller
             if ($formHandler->handle($request)) {
                 $this->successFlash();
             }
+            $this->getDoctrine()->getManager()->flush();
         } catch (SettingsException $exception) {
             $this->get('session')->getFlashBag()->add('danger', $exception->getMessage());
 

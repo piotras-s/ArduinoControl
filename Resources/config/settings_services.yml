@@ -1,0 +1,26 @@
+parameters:
+    arduino.settings_manager.class:   KGzocha\ArduinoBundle\Service\Settings\SettingsManager
+    arduino.settings_saver.class:     KGzocha\ArduinoBundle\Service\Settings\SettingsSaver
+    arduino.settings_giver.class:     KGzocha\ArduinoBundle\Service\Settings\SettingsGiver
+
+    arduino.settings_manager.format:  '/take(\w{1,})/'
+    arduino.settings_manager.glue:    '.'
+
+services:
+    arduino.settings_manager:
+        class:      %arduino.settings_manager.class%
+        arguments:  [@arduino.settings_saver, @arduino.settings_giver]
+        lazy:       true
+        calls:
+            - [setFormat, [%arduino.settings_manager.format%]]
+            - [setGlue, [%arduino.settings_manager.glue%]]
+
+    arduino.settings_saver:
+        class:      %arduino.settings_saver.class%
+        arguments:  [@doctrine.orm.entity_manager, %arduino.settings_manager.glue%]
+        lazy:       true
+
+    arduino.settings_giver:
+        class:      %arduino.settings_giver.class%
+        arguments:  [@doctrine.orm.entity_manager, %arduino.settings_manager.glue%]
+        lazy:       true

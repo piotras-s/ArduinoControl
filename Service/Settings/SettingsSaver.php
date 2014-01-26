@@ -3,12 +3,12 @@
  * @author Krzysztof Gzocha <krzysztof.gzocha@xsolve.pl>
  */
 
-namespace KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm;
+namespace KGzocha\ArduinoBundle\Service\Settings;
 
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Settings;
 
-class SettingsSaver
+class SettingsSaver implements SettingsSaverInterface
 {
 
     /**
@@ -19,23 +19,12 @@ class SettingsSaver
     /**
      * @var string
      */
-    protected $prefix;
+    protected $glue;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, $glue)
     {
         $this->entityManager = $entityManager;
-    }
-
-    /**
-     * @param $prefix
-     *
-     * @return $this
-     */
-    public function setPrefix($prefix)
-    {
-        $this->prefix = $prefix;
-
-        return $this;
+        $this->glue = $glue;
     }
 
     /**
@@ -50,27 +39,29 @@ class SettingsSaver
             $setting = new Settings();
         }
 
-        $setting->setName(sprintf('%s%s', $this->prefix, $key))->setValue($value);
+        $setting->setName($key)->setValue($value);
         $this->entityManager->persist($setting);
     }
 
     /**
+     * @param string    $name
      * @param \stdClass $object
      * @param array     $fields
      */
-    public function saveSettingsFormClass($object, array $fields)
+    public function saveSettingsFromClass($name, $object, array $fields)
     {
         foreach ($fields as $field) {
             $getterMethod = sprintf('%s%s', 'get', ucfirst($field));
             $this->saveSetting(
-                $field,
+                $this->prefixField($name, $field),
                 $object->$getterMethod()
             );
         }
-
-        $this->flush();
     }
 
+    /**
+     * Flushes changes
+     */
     public function flush()
     {
         $this->entityManager->flush();
@@ -84,8 +75,19 @@ class SettingsSaver
     protected function getSetting($key)
     {
         return $this->entityManager->getRepository('ArduinoBundle:Settings')->findOneBy(array(
-                'name' => sprintf('%s%s', $this->prefix, $key)
+                'name' => $key
             ));
+    }
+
+    /**
+     * @param $name
+     * @param $field
+     *
+     * @return string
+     */
+    protected function prefixField($name, $field)
+    {
+        return sprintf('%s%s%s', $name, $this->glue, $field);
     }
 
 }

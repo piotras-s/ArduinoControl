@@ -27,5 +27,6 @@ class ArduinoExtension extends Extension
         $loader->load('response_services.yml');
         $loader->load('statistics_services.yml');
         $loader->load('form_services.yml');
+        $loader->load('settings_services.yml');
     }
 }

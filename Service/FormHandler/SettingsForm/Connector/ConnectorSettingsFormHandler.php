@@ -5,12 +5,11 @@
 
 namespace KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\Connector;
 
-use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Service\ArduinoConnector\Settings\ConnectorSettingsInterface;
 use KGzocha\ArduinoBundle\Service\FormHandler\AbstractFormHandler;
 use KGzocha\ArduinoBundle\Service\FormHandler\FormHandlerInterface;
 use KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsException;
-use KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver;
+use KGzocha\ArduinoBundle\Service\Settings\SettingsManagerInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -23,27 +22,21 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
     protected $formFactory;
 
     /**
-     * @var \KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver
+     * @var \KGzocha\ArduinoBundle\Service\Settings\SettingsManagerInterface
      */
-    protected $saver;
+    protected $settingsManager;
 
     /**
      * @var array<ConnectorSettingsInterface>
      */
     protected $connectorSettingsClasses;
 
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
-
-    public function __construct(FormFactory $formFactory, SettingsSaver $saver,
-        EntityManager $entityManager, $settingsPrefix)
+    public function __construct(FormFactory $formFactory,
+        SettingsManagerInterface $settingsManager,
+        $settingsPrefix)
     {
         $this->formFactory = $formFactory;
-        $this->saver = $saver;
-        $this->entityManager = $entityManager;
-        $this->saver->setPrefix($settingsPrefix);
+        $this->settingsManager = $settingsManager;
         $this->connectorSettingsClasses = array();
     }
 
@@ -54,9 +47,12 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
      */
     public function createForm()
     {
-        $connectorClassName = $this->entityManager->getRepository('ArduinoBundle:Settings')->findOneBy(array(
-                'name' => 'connector.class',
-            ));
+        $connectorClassName = $this
+            ->settingsManager
+            ->clearNavigation()
+            ->takeConnector()
+            ->takeClass()
+            ->giveSetting();
 
         if (!$connectorClassName) {
             throw new SettingsException("Connector class name can not be null");
@@ -83,15 +79,25 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
      */
     public function handle(Request $request)
     {
+        $this->settingsManager->clearNavigation()->takeConnector();
+
         /** @var ConnectorSettingsInterface $model */
         $model = $this->getForm()->getData();
         if (parent::handle($request)) {
-            $this->saver->saveSettingsFormClass($model, $model->getFieldsToSave());
+            $this->settingsManager->saveSettingsFromClass($model, $model->getFieldsToSave());
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param ConnectorSettingsInterface $connectorSetting
+     */
+    public function addConenctorSettingsClass(ConnectorSettingsInterface $connectorSetting)
+    {
+        $this->connectorSettingsClasses[] = $connectorSetting;
     }
 
     /**
@@ -122,14 +128,6 @@ class ConnectorSettingsFormHandler extends AbstractFormHandler implements FormHa
                 return $connectorSetting;
             }
         }
-    }
-
-    /**
-     * @param ConnectorSettingsInterface $connectorSetting
-     */
-    public function addConenctorSettingsClass(ConnectorSettingsInterface $connectorSetting)
-    {
-        $this->connectorSettingsClasses[] = $connectorSetting;
     }
 
 }

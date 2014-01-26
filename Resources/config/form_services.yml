@@ -17,8 +17,7 @@ parameters:
     arduino.form.response_form.alias:             'response_time_form'
 
 #   Conenctor settings form
-    arduino.settings_saver.class:                   'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\SettingsSaver'
-    arduino.form.handler.settings.connector.prefix: 'connector.'
+    arduino.form.handler.settings.connector.prefix: 'connector'
     arduino.form.settings.connector_class.class:    'KGzocha\ArduinoBundle\Form\SettingsForm\Connector\ConnectorClassSettings'
     arduino.form.settings.connector_class.alias:    'connector_class_settings'
     arduino.form.handler.settings.connector.class:  'KGzocha\ArduinoBundle\Service\FormHandler\SettingsForm\Connector\ConnectorSettingsFormHandler'
@@ -70,11 +69,6 @@ services:
 
 #   Settings form
 
-    arduino.settings_saver:
-        class:  %arduino.settings_saver.class%
-        lazy:   true
-        arguments: [@doctrine.orm.entity_manager]
-
     arduino.form.settings.connector_class:
         class:  %arduino.form.settings.connector_class.class%
         lazy:   true
@@ -95,6 +89,6 @@ services:
     arduino.form.handler.settings.connector:
         class:  %arduino.form.handler.settings.connector.class%
         lazy:   true
-        arguments: [@form.factory, @arduino.settings_saver, @doctrine.orm.entity_manager, %arduino.form.handler.settings.connector.prefix%]
+        arguments: [@form.factory, @arduino.settings_manager, %arduino.form.handler.settings.connector.prefix%]
         calls:
             - [addConenctorSettingsClass, [@arduino.connector.settings.web_from_db]]
