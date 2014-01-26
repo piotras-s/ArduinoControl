@@ -104,7 +104,7 @@ class SettingsManager implements SettingsManagerInterface
     {
         $matches = array();
         if (preg_match($this->format, $name, $matches)) {
-            $this->searchedName[] = strtolower($matches[1]);
+            $this->searchedName[] = lcfirst($matches[1]);
         }
 
         return $this;
