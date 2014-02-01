@@ -1,0 +1,6 @@
+<div class="col-lg-3 well" style="margin: 5px;">
+    <p>Name: <strong>{{ parameter.name }}</strong></p>
+    <p>System ID: {{ parameter.systemId }}</p>
+    <p>Description:<br/>{{ parameter.description }}</p>
+    <p><a href="{{ path('arduino_bool_params_edit', {'id': parameter.id}) }}">Edit</a></p>
+</div>

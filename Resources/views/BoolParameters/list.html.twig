@@ -1,0 +1,18 @@
+{% extends 'ArduinoBundle::index.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10">
+            <h1>Parameters list</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for parameter in parameters %}
+            {% include 'ArduinoBundle:BoolParameters:singleParameterOnList.html.twig' with {'parameter': parameter} %}
+        {% endfor %}
+    </div>
+
+{% endblock %}

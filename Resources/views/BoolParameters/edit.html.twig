@@ -1,0 +1,23 @@
+{% extends 'ArduinoBundle::index.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-10">
+            <h1>Edit parameter</h1>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 well">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary btn-lg">
+                Update
+            </button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

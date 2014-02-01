@@ -36,6 +36,17 @@ class StatisticsController extends Controller
     }
 
     /**
+     * @Route("/stats/params", name="arduino_stats_params")
+     */
+    public function boolParamsAction(Request $request)
+    {
+        return $this->actionDefault(
+            $request,
+            $this->getBoolParamsForm()
+        );
+    }
+
+    /**
      * @Route("/stats/response-time", name="arduino_stats_time")
      */
     public function responseTimeStatsAction(Request $request)
@@ -87,6 +98,14 @@ class StatisticsController extends Controller
     protected function getPinForm()
     {
         return $this->get('arduino.form.pin_status_form');
+    }
+
+    /**
+     * @return StatisticsFormInterface
+     */
+    protected function getBoolParamsForm()
+    {
+        return $this->get('arduino.form.bool_param_form');
     }
 
     /**

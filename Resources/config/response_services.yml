@@ -4,15 +4,19 @@ parameters:
     arduino.response.processor.strip_tags.class:      'KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\StripTagsProcessor'
 #    LogTemperatureProcessor
     arduino.response.processor.log_temp.class:        'KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\LogTemperatureProcessor'
-    arduino.response.processor.log_temp.temp_format:  '/T([1-9]{1,3}): ([+-]{0,1}[\.0-9]{1,6})/i'
+    arduino.response.processor.log_temp.temp_format:  '/T([1-9]{1,3}): ([+-]{0,1}[\.0-9]{1,6});/i'
     arduino.response.processor.log_temp.therm_place:  1
     arduino.response.processor.log_temp.value_place:  2
     arduino.response.processor.log_temp.new_thermometer:  'Unidentified thermometer %d.'
 #    LogPinStatusProcessor
     arduino.response.processor.log_pin_status.class:        'KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\LogPinStatusProcessor'
-    arduino.response.processor.log_pin_status.format:       '/P([aA]*[0-9]{1,2}): ([0-9]{1,4})/i'
+    arduino.response.processor.log_pin_status.format:       '/P([aA]*[0-9]{1,2}): ([0-9]{1,4});/i'
     arduino.response.processor.log_pin_status.pin_place:    1
     arduino.response.processor.log_pin_status.value_place:  2
+#    LogBoolParametersProcessor
+    arduino.response.processor.log_bool_param.class:      'KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\LogBoolParametersProcessor'
+    arduino.response.processor.log_bool_param.format:     '/Params: ([01]{1,});/i'
+    arduino.response.processor.log_bool_param.new_param:  'Param with system ID: %d'
 
 services:
     arduino.response.processor.strip_tags:
@@ -38,9 +42,17 @@ services:
 
     arduino.response.response_handler:
         class:      %arduino.response.response_handler.class%
-        arguments:  [@doctrine.orm.entity_manager]
+        arguments:  [@doctrine.orm.entity_manager, @logger]
         lazy:       true
         calls:
             - [addProcessor, [@arduino.response.processor.strip_tags]]
             - [addProcessor, [@arduino.response.processor.log_temp]]
             - [addProcessor, [@arduino.response.processor.log_pin_status]]
+            - [addProcessor, [@arduino.response.processor.log_bool_param]]
+
+    arduino.response.processor.log_bool_param:
+        class:      %arduino.response.processor.log_bool_param.class%
+        lazy:       true
+        arguments:  [@doctrine.orm.entity_manager, %arduino.response.processor.log_bool_param.format%]
+        calls:
+            - [setDefaultParameterName, [%arduino.response.processor.log_bool_param.new_param%]]

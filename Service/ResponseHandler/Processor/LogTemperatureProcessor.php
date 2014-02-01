@@ -5,6 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ResponseHandler\Processor;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\TemperatureLog;
 use KGzocha\ArduinoBundle\Entity\Thermometer;
@@ -54,6 +55,7 @@ class LogTemperatureProcessor implements ProcessorInterface
 
     /**
      * @param $text
+     * @throws ProcessorException
      */
     public function process(&$text)
     {
@@ -70,7 +72,11 @@ class LogTemperatureProcessor implements ProcessorInterface
             }
         }
 
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (DBALException $exception) {
+            throw new ProcessorException('Cant save temperature log.', 500, $exception);
+        }
     }
 
     /**

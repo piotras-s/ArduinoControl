@@ -16,6 +16,10 @@ parameters:
     arduino.form.response_form.class:             'KGzocha\ArduinoBundle\Form\ResponseTimeForm'
     arduino.form.response_form.alias:             'response_time_form'
 
+#   BooleanParameter log
+    arduino.form.bool_param_form.class:           'KGzocha\ArduinoBundle\Form\BooleanParameterLogForm'
+    arduino.form.bool_param_form.alias:           'bool_param_form'
+
 #   Conenctor settings form
     arduino.form.handler.settings.connector.prefix: 'connector'
     arduino.form.settings.connector_class.class:    'KGzocha\ArduinoBundle\Form\SettingsForm\Connector\ConnectorClassSettings'
@@ -36,6 +40,13 @@ parameters:
     arduino.form.settings.connector.web_connector.alias:  'connector_settings_web_connector'
 
 services:
+    arduino.form.bool_param_form:
+        class:      %arduino.form.bool_param_form.class%
+        lazy:       true
+        arguments:  [%arduino.form.bool_param_form.alias%]
+        tags:
+            - { name: form.type, alias: %arduino.form.bool_param_form.alias%}
+
     arduino.form.statistics.model_creator:
         class:  %arduino.form.statistics.model_creator.class%
         lazy:   true

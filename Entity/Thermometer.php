@@ -42,7 +42,12 @@ class Thermometer
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="TemperatureLog", mappedBy="thermometer", fetch="EXTRA_LAZY", cascade={"remove"})
+     * @ORM\OneToMany(
+     *      targetEntity="TemperatureLog",
+     *      mappedBy="thermometer",
+     *      fetch="EXTRA_LAZY",
+     *      cascade={"remove"}
+     * )
      */
     private $temperatureLog;
 

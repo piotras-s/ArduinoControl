@@ -7,7 +7,9 @@ namespace KGzocha\ArduinoBundle\Service\ResponseHandler;
 
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\ResponseLog;
+use KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\ProcessorException;
 use KGzocha\ArduinoBundle\Service\ResponseHandler\Processor\ProcessorInterface;
+use Psr\Log\LoggerInterface;
 
 class ResponseHandler implements ResponseHandlerInterface
 {
@@ -18,13 +20,22 @@ class ResponseHandler implements ResponseHandlerInterface
     protected $entityManager;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+    /**
      * @var array
      */
     protected $processors;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @param EntityManager   $entityManager
+     * @param LoggerInterface $logger
+     */
+    public function __construct(EntityManager $entityManager, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
         $this->processors = array();
     }
 
@@ -58,7 +69,11 @@ class ResponseHandler implements ResponseHandlerInterface
         /** @var ProcessorInterface $processor */
         foreach ($this->processors as $processor) {
             if ($processor->supports($response)) {
-                $processor->process($response);
+                try {
+                    $processor->process($response);
+                } catch (ProcessorException $exception) {
+                    $this->logger->error($exception->getMessage());
+                }
             }
         }
     }

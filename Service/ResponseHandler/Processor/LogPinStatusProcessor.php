@@ -5,6 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\ResponseHandler\Processor;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use KGzocha\ArduinoBundle\Entity\Pin;
 use KGzocha\ArduinoBundle\Entity\PinStatusLog;
@@ -37,6 +38,7 @@ class LogPinStatusProcessor implements ProcessorInterface
 
     /**
      * @param $text
+     * @throws ProcessorException
      */
     public function process(&$text)
     {
@@ -51,8 +53,11 @@ class LogPinStatusProcessor implements ProcessorInterface
                 $this->entityManager->persist($pinStatusLog);
             }
         }
-
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (DBALException $exception) {
+            throw new ProcessorException('Cant save pin status log.', 500, $exception);
+        }
     }
 
     /**
