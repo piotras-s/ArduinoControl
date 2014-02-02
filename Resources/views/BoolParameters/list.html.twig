@@ -10,9 +10,17 @@
     </div>
 
     <div class="row">
+        {% set parameters = pagerfanta.currentPageResults %}
         {% for parameter in parameters %}
-            {% include 'ArduinoBundle:BoolParameters:singleParameterOnList.html.twig' with {'parameter': parameter} %}
+            {% include 'ArduinoBundle:BoolParameters:singleParameterOnList.html.twig'
+                with {'parameter': parameter, 'status': manager.parametersLastLog(parameter).value} %}
         {% endfor %}
     </div>
+
+    {% if pagerfanta.count > itemsPerPage %}
+        <div class="pagerfanta">
+            {{ pagerfanta(pagerfanta, 'twitter_bootstrap3') }}
+        </div>
+    {% endif %}
 
 {% endblock %}

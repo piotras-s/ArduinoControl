@@ -30,7 +30,7 @@ class BooleanParameterForm extends AbstractType
                 )
             )
             ->add('description', 'textarea', array(
-                    'required' => true,
+                    'required' => false,
                     'label' => 'Parameters description',
                     'trim' => true,
                 )

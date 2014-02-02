@@ -19,4 +19,16 @@ class BooleanParameterRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * @return \Doctrine\ORM\AbstractQuery
+     */
+    public function findAllQuery()
+    {
+        return $this->createQueryBuilder('bp')
+            ->orderBy('bp.systemId', 'asc')
+            ->getQuery()
+            ->useResultCache(true);
+    }
+
 }

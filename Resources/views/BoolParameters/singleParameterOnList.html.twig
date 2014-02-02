@@ -1,6 +1,17 @@
-<div class="col-lg-3 well" style="margin: 5px;">
-    <p>Name: <strong>{{ parameter.name }}</strong></p>
+{% if status == 1 %}
+    {% set htmlStatus = 'ON' %}
+    <div class="col-lg-3 alert alert-success" style="margin: 5px;">
+{% else %}
+    {% set htmlStatus = 'OFF' %}
+    <div class="col-lg-3 alert alert-danger" style="margin: 5px;">
+{% endif %}
+    <h4>
+        {{ parameter.name }}
+    </h4>
+    <p>Status: <strong>{{ htmlStatus }}</strong></p>
     <p>System ID: {{ parameter.systemId }}</p>
-    <p>Description:<br/>{{ parameter.description }}</p>
+    {% if parameter.description is not null %}
+        <p>{{ parameter.description }}</p>
+    {% endif %}
     <p><a href="{{ path('arduino_bool_params_edit', {'id': parameter.id}) }}">Edit</a></p>
 </div>

@@ -5,6 +5,8 @@
 namespace KGzocha\ArduinoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
+use KGzocha\ArduinoBundle\Entity\BooleanParameter;
 use KGzocha\ArduinoBundle\Service\Statistics\StatisticableRepositoryInterface;
 
 class BooleanParameterLogRepository extends EntityRepository implements StatisticableRepositoryInterface
@@ -41,5 +43,25 @@ class BooleanParameterLogRepository extends EntityRepository implements Statisti
             ->getQuery()
             ->useResultCache(true, 60)
             ->getArrayResult();
+    }
+
+    /**
+     * @param BooleanParameter $booleanParameter
+     *
+     * @return mixed
+     */
+    public function getLastParameterLog(BooleanParameter $booleanParameter)
+    {
+        $qb = $this->createQueryBuilder('bp');
+
+        return $qb
+            ->select('bp')
+            ->join('bp.booleanParameter', 'p')
+            ->where('p.id = :id')
+            ->setParameter('id', $booleanParameter->getId())
+            ->orderBy('bp.id', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

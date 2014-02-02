@@ -8,9 +8,10 @@ namespace KGzocha\ArduinoBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use KGzocha\ArduinoBundle\Entity\BooleanParameter;
 use KGzocha\ArduinoBundle\Form\BooleanParameterForm;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -18,14 +19,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class BoolParametersController extends Controller
 {
     /**
-     * @Route("/parameters/list", name="arduino_bool_params_list")
+     * @Route("/parameters/list/{page}",
+     *  name="arduino_bool_params_list",
+     *  requirements={"page" = "\d+"},
+     *  defaults={"page"=1}
+     * )
      * @Template()
-     * @Cache
      */
-    public function listAction()
+    public function listAction($page)
     {
+        $itemsPerPage = $this->container->getParameter('items_per_page');
+        $pagerfanta = new Pagerfanta(
+            new DoctrineORMAdapter($this->getRepository()->findAllQuery())
+        );
+        $pagerfanta->setMaxPerPage($itemsPerPage);
+        $pagerfanta->setCurrentPage($page);
+
         return array(
-            'parameters' => $this->getRepository()->findAll(),
+            'manager' => $this->getBoolParamsManager(),
+            'pagerfanta' => $pagerfanta,
+            'itemsPerPage' => $itemsPerPage,
         );
     }
 
@@ -70,5 +83,13 @@ class BoolParametersController extends Controller
             ->getDoctrine()
             ->getManager()
             ->getRepository('ArduinoBundle:BooleanParameter');
+    }
+
+    /**
+     * @return \KGzocha\ArduinoBundle\Service\BooleanParameters\BooleanParameterManager
+     */
+    protected function getBoolParamsManager()
+    {
+        return $this->get('arduino.bool_params.manager');
     }
 }

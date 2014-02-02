@@ -1,6 +1,6 @@
 <?php
 
-const NUMBER_OF_BOOL_PARAMS = 1;
+const NUMBER_OF_BOOL_PARAMS = 3;
 $params = '';
 for ($i=0; $i<NUMBER_OF_BOOL_PARAMS; $i++) {
     $params .= rand(0,1);

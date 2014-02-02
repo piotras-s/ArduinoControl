@@ -1,0 +1,8 @@
+parameters:
+    arduino.bool_params.manager.class:  'KGzocha\ArduinoBundle\Service\BooleanParameters\BooleanParameterManager'
+
+services:
+    arduino.bool_params.manager:
+        class:  %arduino.bool_params.manager.class%
+        lazy:   true
+        arguments: [@doctrine.orm.entity_manager]

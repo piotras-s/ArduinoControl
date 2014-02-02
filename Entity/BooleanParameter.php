@@ -52,6 +52,7 @@ class BooleanParameter
      *      fetch="EXTRA_LAZY",
      *      cascade={"remove", "persist"}
      * )
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     protected $booleanParameterLog;
 
