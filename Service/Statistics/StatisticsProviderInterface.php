@@ -5,7 +5,7 @@
 
 namespace KGzocha\ArduinoBundle\Service\Statistics;
 
-interface StatisticsGiverInterface
+interface StatisticsProviderInterface
 {
     /**
      * @param string    $entity
@@ -16,4 +16,14 @@ interface StatisticsGiverInterface
      * @return array
      */
     public function giveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo);
+
+    /**
+     * @param           $entity
+     * @param           $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
+     *
+     * @return ChartVariables
+     */
+    public function giveSquareWaveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null);
 }

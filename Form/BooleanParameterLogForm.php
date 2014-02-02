@@ -46,6 +46,6 @@ class BooleanParameterLogForm extends AbstractStatisticsForm implements Statisti
      */
     public function getFormLabel()
     {
-        return 'On/off parametr';
+        return 'On/off parameter';
     }
 }

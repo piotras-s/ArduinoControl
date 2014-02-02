@@ -12,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StatisticsController extends Controller
 {
-
     /**
      * @Route("/stats/temp", name="arduino_stats_temp")
      */
@@ -42,7 +41,8 @@ class StatisticsController extends Controller
     {
         return $this->actionDefault(
             $request,
-            $this->getBoolParamsForm()
+            $this->getBoolParamsForm(),
+            true
         );
     }
 
@@ -57,14 +57,27 @@ class StatisticsController extends Controller
         );
     }
 
-    protected function actionDefault(Request $request, StatisticsFormInterface $form)
+    /**
+     * @param Request                 $request
+     * @param StatisticsFormInterface $form
+     * @param bool                    $squareWave
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function actionDefault(Request $request, StatisticsFormInterface $form, $squareWave = false)
     {
         $formHandler = $this->get('arduino.form.handler.statistics')->setFormClass($form)->createForm();
         $formHandler->handle($request);
 
-        $data = $this->getStatisticsParser()->getStatisticsFromHandler(
-            $formHandler
-        );
+        if (!$squareWave) {
+            $data = $this->getStatisticsParser()->getStatisticsFromHandler(
+                $formHandler
+            );
+        } else {
+            $data = $this->getStatisticsParser()->giveSquareWaveStatisticsFromHandler(
+                $formHandler
+            );
+        }
 
         return $this->render('ArduinoBundle:Statistics:data.html.twig',
             array(

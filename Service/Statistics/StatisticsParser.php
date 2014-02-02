@@ -12,18 +12,21 @@ use KGzocha\ArduinoBundle\Service\Statistics\Parsers\StatisticParserInterface;
 class StatisticsParser
 {
     /**
-     * @var StatisticsGiverInterface
+     * @var StatisticsProviderInterface
      */
-    protected $statisticsGiver;
+    protected $statisticsProvider;
 
     /**
      * @var array
      */
     protected $parsers;
 
-    public function __construct(StatisticsGiverInterface $statisticsGiver)
+    /**
+     * @param StatisticsProviderInterface $statisticsGiver
+     */
+    public function __construct(StatisticsProviderInterface $statisticsGiver)
     {
-        $this->statisticsGiver = $statisticsGiver;
+        $this->statisticsProvider = $statisticsGiver;
     }
 
     /**
@@ -42,17 +45,53 @@ class StatisticsParser
     }
 
     /**
-     * @param mixed     $entity
-     * @param int       $id
+     * @param StatisticsFormHandlerInterface $handler
+     *
+     * @return string
+     */
+    public function giveSquareWaveStatisticsFromHandler(StatisticsFormHandlerInterface $handler)
+    {
+        return $this->giveSquareWaveStatistics(
+            $handler->getStatisticsEntityName(),
+            $handler->getId(),
+            $handler->getDateFrom(),
+            $handler->getDateTo()
+        );
+    }
+
+    /**
+     * @param           $entity
+     * @param           $id
      * @param \DateTime $dateFrom
      * @param \DateTime $dateTo
      *
-     * @return array
+     * @return string
      */
     public function getStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $result = '';
-        foreach ($this->statisticsGiver->giveStatistics($entity, $id, $dateFrom, $dateTo) as $variable) {
+        foreach ($this->statisticsProvider->giveStatistics($entity, $id, $dateFrom, $dateTo) as $variable) {
+
+            $this->parse($variable);
+            $result .= json_encode($variable). ",\n";
+
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param           $entity
+     * @param           $id
+     * @param \DateTime $dateFrom
+     * @param \DateTime $dateTo
+     *
+     * @return string
+     */
+    public function giveSquareWaveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
+    {
+        $result = '';
+        foreach ($this->statisticsProvider->giveSquareWaveStatistics($entity, $id, $dateFrom, $dateTo) as $variable) {
 
             $this->parse($variable);
             $result .= json_encode($variable). ",\n";
