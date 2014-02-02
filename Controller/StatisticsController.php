@@ -6,6 +6,7 @@
 namespace KGzocha\ArduinoBundle\Controller;
 
 use KGzocha\ArduinoBundle\Service\FormHandler\Statistics\StatisticsFormInterface;
+use KGzocha\ArduinoBundle\Service\Statistics\Model\StatisticsException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,14 +70,19 @@ class StatisticsController extends Controller
         $formHandler = $this->get('arduino.form.handler.statistics')->setFormClass($form)->createForm();
         $formHandler->handle($request);
 
-        if (!$squareWave) {
-            $data = $this->getStatisticsParser()->getStatisticsFromHandler(
-                $formHandler
-            );
-        } else {
-            $data = $this->getStatisticsParser()->giveSquareWaveStatisticsFromHandler(
-                $formHandler
-            );
+        try {
+            if (!$squareWave) {
+                $data = $this->getStatisticsParser()->getStatisticsFromHandler(
+                    $formHandler
+                );
+            } else {
+                $data = $this->getStatisticsParser()->giveSquareWaveStatisticsFromHandler(
+                    $formHandler
+                );
+            }
+        } catch (StatisticsException $exception) {
+            $this->get('logger')->error($exception->getMessage());
+            $this->get('session')->getFlashBag()->add('danger', 'Error occured while parsing statistics data.');
         }
 
         return $this->render('ArduinoBundle:Statistics:data.html.twig',
