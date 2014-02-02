@@ -76,7 +76,7 @@ class StatisticsController extends Controller
                     $formHandler
                 );
             } else {
-                $data = $this->getStatisticsParser()->giveSquareWaveStatisticsFromHandler(
+                $data = $this->getStatisticsParser()->getSquareWaveStatisticsFromHandler(
                     $formHandler
                 );
             }

@@ -49,9 +49,9 @@ class StatisticsParser
      *
      * @return string
      */
-    public function giveSquareWaveStatisticsFromHandler(StatisticsFormHandlerInterface $handler)
+    public function getSquareWaveStatisticsFromHandler(StatisticsFormHandlerInterface $handler)
     {
-        return $this->giveSquareWaveStatistics(
+        return $this->getSquareWaveStatistics(
             $handler->getStatisticsEntityName(),
             $handler->getId(),
             $handler->getDateFrom(),
@@ -88,7 +88,7 @@ class StatisticsParser
      *
      * @return string
      */
-    public function giveSquareWaveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
+    public function getSquareWaveStatistics($entity, $id, \DateTime $dateFrom = null, \DateTime $dateTo = null)
     {
         $result = '';
         foreach ($this->statisticsProvider->giveSquareWaveStatistics($entity, $id, $dateFrom, $dateTo) as $variable) {
